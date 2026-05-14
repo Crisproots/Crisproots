@@ -1,0 +1,480 @@
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { 
+  Wheat, Brain, BarChart3, Zap, TrendingUp, CheckCircle, Clock, 
+  ArrowRight, PlayCircle, Bot, Sparkles, Award, Star, Shield, 
+  Users, Eye, Rocket, Leaf, Droplets, Sun, Sprout
+} from 'lucide-react';
+
+// Data for the homepage
+const achievements = [
+  { icon: Award, label: "Best AgriTech", org: "Digital India 2024" },
+  { icon: Star, label: "Top Innovation", org: "ICAR Recognition" },
+  { icon: Shield, label: "Certified Safe", org: "ISO 27001" },
+  { icon: Users, label: "Farmer's Choice", org: "Bharat Award" }
+];
+
+const modules = [
+  {
+    title: "AI Garden Advisor",
+    category: "Plant Care",
+    description: "Smart plant disease detection and personalized care recommendations using advanced computer vision",
+    icon: Brain,
+    href: "/aigardenadvisor"
+  },
+  {
+    title: "Crop Simulation",
+    category: "Planning",
+    description: "Advanced crop modeling and yield prediction with weather integration for optimal planning",
+    icon: BarChart3,
+    href: "/cropsimulation"
+  },
+  {
+    title: "Plant Disease Prediction",
+    category: "Health Monitoring",
+    description: "Early disease detection using AI-powered image analysis and expert recommendations",
+    icon: Leaf,
+    href: "/plantdiseaseprediction"
+  },
+  {
+    title: "Demand Analysis",
+    category: "Market Intelligence",
+    description: "Market demand forecasting and price prediction for informed crop selection decisions",
+    icon: TrendingUp,
+    href: "/demandanalysis"
+  },
+  {
+    title: "Cattle Management",
+    category: "Livestock",
+    description: "Complete livestock management system with health monitoring and breeding optimization",
+    icon: Users,
+    href: "/cattlefarmmanagement"
+  },
+  {
+    title: "GreenGuardian",
+    category: "Sustainability",
+    description: "Environmental monitoring and sustainable farming practice recommendations",
+    icon: Shield,
+    href: "/greenguardian"
+  }
+];
+
+const testimonials = [
+  {
+    name: "राजेश कुमार",
+    location: "पंजाब, लुधियाना",
+    quote: "AI की मदद से मेरी फसल की उत्पादना 40% बढ़ गई है। अब मैं सही समय पर सही निर्णय ले सकता हूं।",
+    results: ["40% अधिक उत्पादन", "₹2.5 लाख अतिरिक्त आमदनी", "50% कम बीमारियां"]
+  },
+  {
+    name: "सुनीता देवी",
+    location: "हरियाणा, करनाल",
+    quote: "Plant disease detection से मेरी फसल समय पर बच गई। बहुत accurate और easy to use है।",
+    results: ["90% रोग पहचान सटीकता", "₹1.8 लाख बचत", "Zero crop loss"]
+  },
+  {
+    name: "अमित शर्मा",
+    location: "उत्तर प्रदेश, मेरठ",
+    quote: "Demand analysis की वजह से मैंने सही crop choose की और market में अच्छा profit मिला।",
+    results: ["35% अधिक profit", "Market timing perfect", "Risk-free decisions"]
+  }
+];
+
+export default function HomePage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Initialize component
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full animate-pulse mx-auto"></div>
+            <Wheat className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-10 w-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-green-700 mb-2">Loading Agricultural Intelligence</h2>
+          <p className="text-green-600">Preparing the future of farming...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-blue-50 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-40 right-40 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-6000"></div>
+      </div>
+
+      {/* Modern Navigation */}
+      <nav className="relative bg-white/95 backdrop-blur-lg border-b border-green-200 sticky top-0 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-4">
+              <div className="relative group">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                  <Wheat className="h-8 w-8 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  FarmHub AI
+                </h1>
+                <p className="text-sm text-green-600 font-medium">Agricultural Intelligence Platform</p>
+              </div>
+            </div>
+            
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-700 hover:text-green-600 font-medium transition-colors">Features</a>
+              <a href="#modules" className="text-gray-700 hover:text-green-600 font-medium transition-colors">Solutions</a>
+              <a href="#testimonials" className="text-gray-700 hover:text-green-600 font-medium transition-colors">Success Stories</a>
+              <Link href="/aigardenadvisor" className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium">
+                Start Free Trial
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Revolutionary Hero Section */}
+      <section ref={heroRef} className="relative pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Hero Content */}
+            <div className="space-y-8 animate-fade-in-up">
+              {/* Premium Badge */}
+              <div className="inline-flex items-center space-x-2 bg-green-100 text-green-700 px-6 py-3 rounded-full text-sm font-bold shadow-lg">
+                <Sparkles className="h-5 w-5" />
+                <span>India&apos;s #1 AI-Powered Farming Platform</span>
+                <Award className="h-5 w-5" />
+              </div>
+              
+              {/* Revolutionary Title */}
+              <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
+                Transform Your
+                <span className="block bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent animate-gradient-x">
+                  Farm with AI
+                </span>
+              </h1>
+              
+              {/* Compelling Description */}
+              <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                Join <span className="font-bold text-green-600">1,20,000+ farmers</span> who increased their yield by 
+                <span className="font-bold text-emerald-600"> 40%</span> and reduced costs by 
+                <span className="font-bold text-blue-600"> 30%</span> using our AI-powered agricultural intelligence platform.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/aigardenadvisor" className="group bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 font-semibold text-lg inline-flex items-center justify-center">
+                  <span>Start Free Trial</span>
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                
+                <button className="group bg-white text-gray-700 px-8 py-4 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold text-lg inline-flex items-center justify-center">
+                  <PlayCircle className="mr-2 h-5 w-5 text-green-500" />
+                  <span>Watch Demo</span>
+                </button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex items-center space-x-8 pt-8">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">25K+</div>
+                  <div className="text-sm text-gray-600">Active Farms</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">98.7%</div>
+                  <div className="text-sm text-gray-600">AI Accuracy</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">₹50Cr+</div>
+                  <div className="text-sm text-gray-600">Total Savings</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Dashboard Preview */}
+            <div className="relative animate-fade-in-right">
+              <div className="relative bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                <div className="bg-white rounded-2xl p-6 shadow-xl">
+                  {/* Mock AI Dashboard */}
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-gray-900">AI Farm Dashboard</h3>
+                      <div className="flex items-center space-x-1 text-green-600">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-medium">Live</span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Brain className="h-5 w-5 text-green-600" />
+                          <span className="text-sm font-medium text-gray-700">Crop Health</span>
+                        </div>
+                        <div className="text-2xl font-bold text-green-600">97%</div>
+                        <div className="text-xs text-green-500">+5% this week</div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <TrendingUp className="h-5 w-5 text-blue-600" />
+                          <span className="text-sm font-medium text-gray-700">Yield Forecast</span>
+                        </div>
+                        <div className="text-2xl font-bold text-blue-600">+42%</div>
+                        <div className="text-xs text-blue-500">Above average</div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">Water Efficiency</span>
+                        <span className="text-sm font-bold text-amber-600">Optimal</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="bg-gradient-to-r from-amber-400 to-orange-400 h-2 rounded-full w-4/5 animate-pulse"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl">
+                      <div className="text-sm font-medium text-gray-700 mb-2">AI Recommendations</div>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="text-xs text-gray-600">Apply fertilizer in zone A</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-amber-500" />
+                          <span className="text-xs text-gray-600">Pest risk detected - take action</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -right-4 bg-green-500 text-white p-3 rounded-full shadow-lg animate-bounce">
+                  <Bot className="h-6 w-6" />
+                </div>
+                <div className="absolute -bottom-4 -left-4 bg-blue-500 text-white p-3 rounded-full shadow-lg animate-pulse">
+                  <BarChart3 className="h-6 w-6" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">AI-Powered Farm Management</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Complete agricultural intelligence platform with cutting-edge features
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="group relative p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Brain className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">AI Plant Doctor</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Advanced computer vision for instant plant disease detection with 97% accuracy
+              </p>
+              <div className="mt-4 text-green-600 font-semibold text-sm">
+                ✨ 50,000+ diseases identified daily
+              </div>
+            </div>
+
+            <div className="group relative p-8 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Smart Analytics</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Real-time yield prediction and crop optimization using satellite data
+              </p>
+              <div className="mt-4 text-blue-600 font-semibold text-sm">
+                📊 85% more accurate forecasts
+              </div>
+            </div>
+
+            <div className="group relative p-8 bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Auto Farming</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Intelligent automation for irrigation, fertilization, and pest control
+              </p>
+              <div className="mt-4 text-purple-600 font-semibold text-sm">
+                ⚡ 60% reduced manual work
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">विश्वसनीय और पुरस्कार प्राप्त Platform</h2>
+            <p className="text-xl text-gray-600">भारत की leading agricultural organizations द्वारा मान्यता प्राप्त</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {achievements.map((achievement, index) => (
+              <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-white rounded-xl p-6 shadow-lg group-hover:shadow-xl transition-shadow">
+                  <achievement.icon className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                  <div className="font-bold text-gray-900 mb-2">{achievement.label}</div>
+                  <div className="text-sm text-gray-600">{achievement.org}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions Gallery */}
+      <section id="modules" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Complete Farm Management Solutions</h2>
+            <p className="text-xl text-gray-600">Every tool you need for modern farming success</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {modules.map((module, index) => (
+              <Link key={index} href={module.href} className="group">
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 transform hover:scale-105">
+                  <div className="flex items-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                      <module.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{module.title}</h3>
+                      <div className="text-sm text-green-600 font-medium">{module.category}</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 mb-4 leading-relaxed">{module.description}</p>
+                  <div className="flex items-center text-green-600 font-semibold group-hover:text-green-700">
+                    <span className="mr-2">Explore now</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories */}
+      <section id="testimonials" className="py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">किसानों की सफलता की कहानी</h2>
+            <p className="text-xl text-gray-600">Real farmers, Real results with AI technology</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="font-bold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600">{testimonial.location}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                
+                <blockquote className="text-gray-700 mb-6 italic leading-relaxed">
+                  "{testimonial.quote}"
+                </blockquote>
+                
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                  <div className="text-sm font-semibold text-green-700 mb-2">Key Results:</div>
+                  <ul className="text-sm text-green-600 space-y-1">
+                    {testimonial.results.map((result, i) => (
+                      <li key={i} className="flex items-center">
+                        <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                        {result}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-6">
+            Ready to Transform Your Farm?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Join thousands of successful farmers using AI to increase yields and profits
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <Shield className="w-8 h-8 text-white mx-auto mb-3" />
+              <div className="font-semibold text-white">Free Trial</div>
+              <div className="text-sm text-white/80">30 दिन मुफ्त</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <Users className="w-8 h-8 text-white mx-auto mb-3" />
+              <div className="font-semibold text-white">24/7 Support</div>
+              <div className="text-sm text-white/80">Hindi में help</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <Zap className="w-8 h-8 text-white mx-auto mb-3" />
+              <div className="font-semibold text-white">Instant Setup</div>
+              <div className="text-sm text-white/80">5 मिनट में ready</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <Award className="w-8 h-8 text-white mx-auto mb-3" />
+              <div className="font-semibold text-white">Guaranteed ROI</div>
+              <div className="text-sm text-white/80">पैसा वापसी की गारंटी</div>
+            </div>
+          </div>
+          <Link href="/aigardenadvisor" className="inline-flex items-center bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors transform hover:scale-105 shadow-xl">
+            <span>शुरू करें - Start Now</span>
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,2523 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { 
+  Drone, 
+  Camera, 
+  Battery, 
+  Signal, 
+  MapPin, 
+  Play, 
+  Pause, 
+  Square, 
+  Navigation, 
+  Crosshair,
+  Eye,
+  Thermometer,
+  Activity,
+  Settings,
+  Layers,
+  Map,
+  Satellite,
+  Target,
+  Clock,
+  TrendingUp,
+  Wifi,
+  WifiOff,
+  RefreshCw,
+  Plus,
+  Download,
+  Sun,
+  Wind,
+  Compass,
+  Shield,
+  Zap,
+  Database,
+  Globe,
+  Mountain,
+  TreePine,
+  Droplets,
+  Search,
+  Filter,
+  BarChart3
+} from 'lucide-react';
+
+interface DroneStatus {
+  id: string;
+  name: string;
+  status: 'idle' | 'flying' | 'returning' | 'charging' | 'maintenance';
+  battery: number;
+  signal: number;
+  altitude: number;
+  speed: number;
+  location: { lat: number; lng: number };
+  flightTime: number;
+  lastMaintenance: string;
+  totalFlights: number;
+}
+
+interface FlightMission {
+  id: string;
+  name: string;
+  type: 'survey' | 'monitoring' | 'spraying' | 'mapping' | 'emergency';
+  status: 'pending' | 'active' | 'completed' | 'cancelled';
+  startTime?: string;
+  endTime?: string;
+  area: number;
+  waypoints: Array<{ lat: number; lng: number; altitude: number }>;
+  sensors: string[];
+  priority: 'low' | 'medium' | 'high' | 'critical';
+}
+
+interface WeatherData {
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
+  windDirection: number;
+  pressure: number;
+  condition: 'sunny' | 'cloudy' | 'rainy' | 'stormy';
+  uvIndex: number;
+  visibility: number;
+  forecast: Array<{
+    hour: number;
+    temperature: number;
+    condition: string;
+    windSpeed: number;
+  }>;
+}
+
+interface GeofenceZone {
+  id: string;
+  name: string;
+  type: 'no_fly' | 'restricted' | 'safe' | 'return_home';
+  coordinates: Array<{ lat: number; lng: number }>;
+  altitude_min: number;
+  altitude_max: number;
+  active: boolean;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+}
+
+interface SoilData {
+  location: { lat: number; lng: number };
+  ph: number;
+  moisture: number;
+  temperature: number;
+  nitrogen: number;
+  phosphorus: number;
+  potassium: number;
+  organicMatter: number;
+  salinity: number;
+  compaction: number;
+  lastUpdated: string;
+}
+
+interface LocationProfile {
+  id: string;
+  name: string;
+  coordinates: { lat: number; lng: number };
+  area: number;
+  cropType: string;
+  plantingDate: string;
+  soilType: string;
+  irrigationType: string;
+  weatherStation: string;
+}
+
+interface SensorData {
+  timestamp: string;
+  location: { lat: number; lng: number };
+  rgb_image: string;
+  thermal_image?: string;
+  multispectral_data?: {
+    ndvi: number;
+    gndvi: number;
+    rvi: number;
+  };
+  environmental: {
+    temperature: number;
+    humidity: number;
+    pressure: number;
+    wind_speed: number;
+  };
+  analysis: {
+    crop_health: number;
+    disease_detected: boolean;
+    pest_activity: boolean;
+    irrigation_needed: boolean;
+    weed_density: number;
+  };
+}
+
+const DroneMonitoringSystem: React.FC = () => {
+  const [selectedDrone, setSelectedDrone] = useState<string>('drone-1');
+  const [isLiveView, setIsLiveView] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'map' | 'data' | 'analysis' | 'geofence' | 'weather' | 'soil' | 'realtime'>('map');
+  const [selectedLocation, setSelectedLocation] = useState<string>('location-1');
+  const [mapMode, setMapMode] = useState<'2d' | '3d' | 'satellite' | 'terrain'>('3d');
+  const [showGeofences, setShowGeofences] = useState<boolean>(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [realtimeData, setRealtimeData] = useState<Array<{
+    timestamp: number;
+    battery: number;
+    altitude: number;
+    speed: number;
+    temperature: number;
+    humidity: number;
+    soilMoisture: number;
+    cropHealth: number;
+  }>>([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    flightEfficiency: 92.5,
+    dataAccuracy: 98.2,
+    systemUptime: 99.8,
+    energyOptimization: 87.3
+  });
+
+  const [drones, setDrones] = useState<DroneStatus[]>([
+    {
+      id: 'drone-1',
+      name: 'AgriScout Alpha',
+      status: 'flying',
+      battery: 78,
+      signal: 95,
+      altitude: 50,
+      speed: 12.5,
+      location: { lat: 28.7041, lng: 77.1025 },
+      flightTime: 1245,
+      lastMaintenance: '2024-07-15',
+      totalFlights: 127
+    },
+    {
+      id: 'drone-2',
+      name: 'CropGuard Beta',
+      status: 'idle',
+      battery: 100,
+      signal: 88,
+      altitude: 0,
+      speed: 0,
+      location: { lat: 28.7041, lng: 77.1025 },
+      flightTime: 0,
+      lastMaintenance: '2024-07-18',
+      totalFlights: 89
+    },
+    {
+      id: 'drone-3',
+      name: 'FieldEye Gamma',
+      status: 'charging',
+      battery: 45,
+      signal: 0,
+      altitude: 0,
+      speed: 0,
+      location: { lat: 28.7041, lng: 77.1025 },
+      flightTime: 0,
+      lastMaintenance: '2024-07-12',
+      totalFlights: 203
+    }
+  ]);
+
+  // Weather data
+  const [weatherData] = useState<WeatherData>({
+    temperature: 26.5,
+    humidity: 68,
+    windSpeed: 8.5,
+    windDirection: 245,
+    pressure: 1013.2,
+    condition: 'sunny',
+    uvIndex: 7,
+    visibility: 10,
+    forecast: [
+      { hour: 14, temperature: 28, condition: 'sunny', windSpeed: 9 },
+      { hour: 15, temperature: 29, condition: 'cloudy', windSpeed: 10 },
+      { hour: 16, temperature: 27, condition: 'sunny', windSpeed: 8 },
+      { hour: 17, temperature: 25, condition: 'cloudy', windSpeed: 7 }
+    ]
+  });
+
+  // Geofence zones
+  const [geofences] = useState<GeofenceZone[]>([
+    {
+      id: 'zone-1',
+      name: 'Airport Restriction',
+      type: 'no_fly',
+      coordinates: [
+        { lat: 28.7100, lng: 77.1100 },
+        { lat: 28.7120, lng: 77.1150 },
+        { lat: 28.7080, lng: 77.1180 },
+        { lat: 28.7060, lng: 77.1130 }
+      ],
+      altitude_min: 0,
+      altitude_max: 120,
+      active: true,
+      priority: 'critical'
+    },
+    {
+      id: 'zone-2',
+      name: 'Safe Zone Alpha',
+      type: 'safe',
+      coordinates: [
+        { lat: 28.7000, lng: 77.0950 },
+        { lat: 28.7050, lng: 77.1000 },
+        { lat: 28.7020, lng: 77.1050 },
+        { lat: 28.6980, lng: 77.1000 }
+      ],
+      altitude_min: 0,
+      altitude_max: 60,
+      active: true,
+      priority: 'low'
+    }
+  ]);
+
+  // Soil data from multiple locations
+  const [soilData] = useState<SoilData[]>([
+    {
+      location: { lat: 28.7041, lng: 77.1025 },
+      ph: 6.8,
+      moisture: 45,
+      temperature: 24.5,
+      nitrogen: 85,
+      phosphorus: 32,
+      potassium: 180,
+      organicMatter: 3.2,
+      salinity: 0.8,
+      compaction: 15,
+      lastUpdated: '2024-07-20T08:00:00Z'
+    },
+    {
+      location: { lat: 28.7051, lng: 77.1035 },
+      ph: 7.1,
+      moisture: 38,
+      temperature: 25.1,
+      nitrogen: 78,
+      phosphorus: 28,
+      potassium: 165,
+      organicMatter: 2.9,
+      salinity: 1.2,
+      compaction: 18,
+      lastUpdated: '2024-07-20T08:15:00Z'
+    }
+  ]);
+
+  // Location profiles for crop management
+  const [locationProfiles] = useState<LocationProfile[]>([
+    {
+      id: 'location-1',
+      name: 'North Field - Wheat',
+      coordinates: { lat: 28.7041, lng: 77.1025 },
+      area: 12.5,
+      cropType: 'Winter Wheat',
+      plantingDate: '2024-11-15',
+      soilType: 'Loamy Clay',
+      irrigationType: 'Drip Irrigation',
+      weatherStation: 'Delhi-North'
+    },
+    {
+      id: 'location-2',
+      name: 'South Field - Rice',
+      coordinates: { lat: 28.7021, lng: 77.1015 },
+      area: 8.3,
+      cropType: 'Basmati Rice',
+      plantingDate: '2024-06-20',
+      soilType: 'Clay',
+      irrigationType: 'Flood Irrigation',
+      weatherStation: 'Delhi-South'
+    },
+    {
+      id: 'location-3',
+      name: 'East Field - Vegetables',
+      coordinates: { lat: 28.7051, lng: 77.1055 },
+      area: 6.7,
+      cropType: 'Mixed Vegetables',
+      plantingDate: '2024-03-10',
+      soilType: 'Sandy Loam',
+      irrigationType: 'Sprinkler',
+      weatherStation: 'Delhi-East'
+    }
+  ]);
+
+  const [missions] = useState<FlightMission[]>([
+    {
+      id: 'mission-1',
+      name: 'Morning Crop Survey',
+      type: 'survey',
+      status: 'active',
+      startTime: '2024-07-20T06:00:00Z',
+      area: 12.5,
+      waypoints: [
+        { lat: 28.7041, lng: 77.1025, altitude: 50 },
+        { lat: 28.7051, lng: 77.1035, altitude: 50 },
+        { lat: 28.7031, lng: 77.1045, altitude: 50 }
+      ],
+      sensors: ['RGB Camera', 'Multispectral', 'Thermal'],
+      priority: 'high'
+    },
+    {
+      id: 'mission-2',
+      name: 'Disease Detection Patrol',
+      type: 'monitoring',
+      status: 'pending',
+      area: 8.3,
+      waypoints: [
+        { lat: 28.7021, lng: 77.1015, altitude: 30 },
+        { lat: 28.7031, lng: 77.1025, altitude: 30 }
+      ],
+      sensors: ['RGB Camera', 'Multispectral'],
+      priority: 'medium'
+    }
+  ]);
+
+  const [sensorData] = useState<SensorData[]>([
+    {
+      timestamp: '2024-07-20T12:00:00Z',
+      location: { lat: 28.7041, lng: 77.1025 },
+      rgb_image: '/api/drone-images/rgb_001.jpg',
+      thermal_image: '/api/drone-images/thermal_001.jpg',
+      multispectral_data: {
+        ndvi: 0.78,
+        gndvi: 0.65,
+        rvi: 1.23
+      },
+      environmental: {
+        temperature: 26.5,
+        humidity: 68,
+        pressure: 1013.2,
+        wind_speed: 8.5
+      },
+      analysis: {
+        crop_health: 0.85,
+        disease_detected: false,
+        pest_activity: false,
+        irrigation_needed: false,
+        weed_density: 0.12
+      }
+    }
+  ]);
+
+  // Real-time updates simulation
+  useEffect(() => {
+    if (!isLiveView) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      
+      // Update drone data
+      setDrones(prevDrones => 
+        prevDrones.map(drone => {
+          if (drone.status === 'flying') {
+            return {
+              ...drone,
+              battery: Math.max(10, drone.battery - 0.5),
+              flightTime: drone.flightTime + 5,
+              location: {
+                lat: drone.location.lat + (Math.random() - 0.5) * 0.001,
+                lng: drone.location.lng + (Math.random() - 0.5) * 0.001
+              }
+            };
+          }
+          return drone;
+        })
+      );
+
+      // Update real-time chart data
+      setRealtimeData(prevData => {
+        const newDataPoint = {
+          timestamp: now,
+          battery: Math.max(10, 78 + Math.sin(now / 10000) * 15 + (Math.random() - 0.5) * 5),
+          altitude: Math.max(0, 50 + Math.cos(now / 8000) * 20 + (Math.random() - 0.5) * 10),
+          speed: Math.max(0, 12.5 + Math.sin(now / 6000) * 8 + (Math.random() - 0.5) * 3),
+          temperature: 26.5 + Math.sin(now / 15000) * 3 + (Math.random() - 0.5) * 2,
+          humidity: 68 + Math.cos(now / 12000) * 10 + (Math.random() - 0.5) * 5,
+          soilMoisture: 45 + Math.sin(now / 20000) * 15 + (Math.random() - 0.5) * 8,
+          cropHealth: 85 + Math.cos(now / 25000) * 10 + (Math.random() - 0.5) * 5
+        };
+
+        const updatedData = [...prevData, newDataPoint];
+        return updatedData.slice(-50); // Keep last 50 data points
+      });
+
+      // Update performance metrics
+      setPerformanceMetrics(prev => ({
+        flightEfficiency: Math.max(80, Math.min(100, prev.flightEfficiency + (Math.random() - 0.5) * 2)),
+        dataAccuracy: Math.max(90, Math.min(100, prev.dataAccuracy + (Math.random() - 0.5) * 1)),
+        systemUptime: Math.max(95, Math.min(100, prev.systemUptime + (Math.random() - 0.5) * 0.5)),
+        energyOptimization: Math.max(70, Math.min(100, prev.energyOptimization + (Math.random() - 0.5) * 3))
+      }));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isLiveView]);
+
+  // Request user location for crop management
+  const requestUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          alert(`Location acquired: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          alert('Unable to get your location. Please enable location services.');
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
+  };
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'flying': return 'text-green-600 bg-green-100';
+      case 'idle': return 'text-blue-600 bg-blue-100';
+      case 'charging': return 'text-yellow-600 bg-yellow-100';
+      case 'maintenance': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'flying': return <Play className="w-4 h-4" />;
+      case 'idle': return <Pause className="w-4 h-4" />;
+      case 'charging': return <Battery className="w-4 h-4" />;
+      case 'maintenance': return <Settings className="w-4 h-4" />;
+      default: return <Square className="w-4 h-4" />;
+    }
+  };
+
+  const getBatteryColor = (battery: number): string => {
+    if (battery > 60) return 'text-green-600';
+    if (battery > 30) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+  };
+
+  const currentDrone = drones.find(d => d.id === selectedDrone);
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Advanced Drone Monitoring System</h2>
+          <p className="text-gray-600">Real-time aerial surveillance, weather monitoring, and precision agriculture</p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={requestUserLocation}
+            className="flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Get Location</span>
+          </button>
+          <button
+            onClick={() => setIsLiveView(!isLiveView)}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+              isLiveView ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+            }`}
+          >
+            {isLiveView ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
+            <span>{isLiveView ? 'Live' : 'Offline'}</span>
+          </button>
+          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <RefreshCw className="w-4 h-4" />
+            <span>Sync</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Location Status */}
+      {userLocation && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <MapPin className="w-5 h-5 text-green-600" />
+            <span className="text-green-800 font-medium">Location Acquired:</span>
+            <span className="text-green-700">{userLocation.lat.toFixed(6)}, {userLocation.lng.toFixed(6)}</span>
+            <button className="ml-auto text-green-600 hover:text-green-800">
+              <Settings className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Navigation Tabs */}
+      <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setViewMode('map')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'map' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <Globe className="w-4 h-4" />
+              <span>3D Map</span>
+            </button>
+            <button
+              onClick={() => setViewMode('geofence')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'geofence' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <Shield className="w-4 h-4" />
+              <span>Geofencing</span>
+            </button>
+            <button
+              onClick={() => setViewMode('weather')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'weather' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <Sun className="w-4 h-4" />
+              <span>Weather</span>
+            </button>
+            <button
+              onClick={() => setViewMode('soil')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'soil' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <Database className="w-4 h-4" />
+              <span>Soil Grid</span>
+            </button>
+            <button
+              onClick={() => setViewMode('data')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'data' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>Analytics</span>
+            </button>
+            <button
+              onClick={() => setViewMode('realtime')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                viewMode === 'realtime' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              <span>Real-time</span>
+            </button>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setMapMode('3d')}
+              className={`px-3 py-1 rounded ${mapMode === '3d' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              <Mountain className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setMapMode('satellite')}
+              className={`px-3 py-1 rounded ${mapMode === 'satellite' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              <Satellite className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setMapMode('terrain')}
+              className={`px-3 py-1 rounded ${mapMode === 'terrain' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              <TreePine className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Drone Fleet Status */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {drones.map((drone) => (
+          <div
+            key={drone.id}
+            onClick={() => setSelectedDrone(drone.id)}
+            className={`p-6 bg-white rounded-xl shadow-lg border-2 cursor-pointer transition-all ${
+              selectedDrone === drone.id ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <Drone className="w-8 h-8 text-blue-500" />
+                <div>
+                  <h3 className="font-semibold text-gray-900">{drone.name}</h3>
+                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(drone.status)}`}>
+                    {getStatusIcon(drone.status)}
+                    <span className="capitalize">{drone.status}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Battery className={`w-4 h-4 ${getBatteryColor(drone.battery)}`} />
+                  <span className="text-sm text-gray-600">Battery</span>
+                </div>
+                <span className={`font-semibold ${getBatteryColor(drone.battery)}`}>
+                  {drone.battery}%
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Signal className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm text-gray-600">Signal</span>
+                </div>
+                <span className="font-semibold text-gray-900">{drone.signal}%</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Navigation className="w-4 h-4 text-green-500" />
+                  <span className="text-sm text-gray-600">Altitude</span>
+                </div>
+                <span className="font-semibold text-gray-900">{drone.altitude}m</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4 text-purple-500" />
+                  <span className="text-sm text-gray-600">Flight Time</span>
+                </div>
+                <span className="font-semibold text-gray-900">{formatTime(drone.flightTime)}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Total Flights: {drone.totalFlights}</span>
+                <span className="text-gray-600">Last Service: {drone.lastMaintenance}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Control Panel */}
+      {currentDrone && (
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Control Panel - {currentDrone.name}
+            </h3>
+            <div className="flex items-center space-x-2">
+              <button className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                <Play className="w-4 h-4" />
+              </button>
+              <button className="p-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                <Pause className="w-4 h-4" />
+              </button>
+              <button className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                <Square className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Live Drone POV Video Feed */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium text-gray-700">Live Drone POV Feed</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-red-600 font-medium">LIVE</span>
+                  </div>
+                  <div className="text-xs text-gray-500">1080p • 30fps</div>
+                </div>
+              </div>
+              <div className="relative bg-black rounded-lg overflow-hidden" style={{ height: '350px' }}>
+                <video 
+                  className="w-full h-full object-cover"
+                  autoPlay 
+                  loop 
+                  muted
+                  playsInline
+                >
+                  <source src="/videoplayback (1).mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Video Overlay Controls */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none"></div>
+                
+                {/* Live Status Indicators */}
+                <div className="absolute top-3 left-3 flex flex-col space-y-2">
+                  <div className="bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
+                    ALT: {currentDrone.altitude}m
+                  </div>
+                  <div className="bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
+                    SPD: {currentDrone.speed} m/s
+                  </div>
+                  <div className="bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
+                    BAT: {currentDrone.battery}%
+                  </div>
+                </div>
+
+                {/* GPS Coordinates */}
+                <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
+                  {currentDrone.location.lat.toFixed(6)}, {currentDrone.location.lng.toFixed(6)}
+                </div>
+
+                {/* Crosshair/Target Indicator */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="relative">
+                    <div className="w-8 h-8 border-2 border-green-400 rounded-full opacity-80"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mission Status */}
+                <div className="absolute bottom-3 left-3 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                  Mission: Field Survey Alpha • Zone 3/8
+                </div>
+
+                {/* Recording Indicator */}
+                <div className="absolute bottom-3 right-3 flex items-center space-x-2 bg-red-600/90 text-white px-2 py-1 rounded text-xs">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <span>REC</span>
+                </div>
+              </div>
+
+              {/* Video Controls */}
+              <div className="flex items-center justify-between p-3 bg-gray-100 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    <Camera className="w-4 h-4" />
+                  </button>
+                  <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    <Play className="w-4 h-4" />
+                  </button>
+                  <button className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    <Settings className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <Signal className="w-4 h-4" />
+                  <span>Signal: {currentDrone.signal}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3D Drone Model */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">3D Drone Model</h4>
+              <div className="relative bg-gray-900 rounded-lg overflow-hidden" style={{ height: '250px' }}>
+                <div className="sketchfab-embed-wrapper w-full h-full">
+                  <iframe 
+                    title="Drone 3D Model" 
+                    frameBorder="0" 
+                    allowFullScreen 
+                    allow="autoplay; fullscreen; xr-spatial-tracking" 
+                    className="w-full h-full"
+                    src="https://sketchfab.com/models/80d9392bf1e640098f2f6365c7bbec74/embed?autospin=1&autostart=1&preload=1&ui_theme=dark&camera=0"
+                  />
+                </div>
+                <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                  3D Model
+                </div>
+              </div>
+              
+              {/* 3D Model Controls */}
+              <div className="flex justify-between items-center text-xs text-gray-600">
+                <span>Interactive 3D model powered by Sketchfab</span>
+                <div className="flex space-x-2">
+                  <button className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
+                    Reset View
+                  </button>
+                  <button className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
+                    Fullscreen
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Telemetry */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Live Telemetry</h4>
+              <div className="space-y-3">
+                {[
+                  { label: 'Coordinates', value: `${currentDrone.location.lat.toFixed(4)}, ${currentDrone.location.lng.toFixed(4)}`, icon: MapPin },
+                  { label: 'Speed', value: `${currentDrone.speed} m/s`, icon: Navigation },
+                  { label: 'Battery Voltage', value: '14.8V', icon: Battery },
+                  { label: 'GPS Satellites', value: '12 connected', icon: Satellite },
+                  { label: 'Wind Resistance', value: 'Normal', icon: Activity }
+                ].map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <Icon className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm text-gray-600">{item.label}</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{item.value}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Camera Controls */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Camera Controls</h4>
+              <div className="space-y-3">
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                  <Camera className="w-4 h-4" />
+                  <span>Capture RGB</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                  <Thermometer className="w-4 h-4" />
+                  <span>Thermal Scan</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                  <Layers className="w-4 h-4" />
+                  <span>Multispectral</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                  <Eye className="w-4 h-4" />
+                  <span>Live Stream</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Quick Actions</h4>
+              <div className="space-y-3">
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600">
+                  <Target className="w-4 h-4" />
+                  <span>Auto Survey</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                  <Crosshair className="w-4 h-4" />
+                  <span>Return to Base</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                  <Download className="w-4 h-4" />
+                  <span>Download Data</span>
+                </button>
+                <button className="w-full flex items-center justify-center space-x-2 p-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                  <Settings className="w-4 h-4" />
+                  <span>Configuration</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Weather Monitoring Dashboard */}
+      {viewMode === 'weather' && (
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Weather Monitoring</h3>
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <Zap className="w-4 h-4" />
+              <span>Last updated: {new Date().toLocaleTimeString()}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Thermometer className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">Temperature</span>
+              </div>
+              <p className="text-2xl font-bold text-blue-900">{weatherData.temperature}°C</p>
+              <p className="text-xs text-blue-700">Feels like {weatherData.temperature + 2}°C</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Droplets className="w-5 h-5 text-green-600" />
+                <span className="text-sm font-medium text-green-800">Humidity</span>
+              </div>
+              <p className="text-2xl font-bold text-green-900">{weatherData.humidity}%</p>
+              <p className="text-xs text-green-700">Optimal for crops</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Wind className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-medium text-purple-800">Wind</span>
+              </div>
+              <p className="text-2xl font-bold text-purple-900">{weatherData.windSpeed} m/s</p>
+              <p className="text-xs text-purple-700">{weatherData.windDirection}° SW</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Sun className="w-5 h-5 text-orange-600" />
+                <span className="text-sm font-medium text-orange-800">UV Index</span>
+              </div>
+              <p className="text-2xl font-bold text-orange-900">{weatherData.uvIndex}</p>
+              <p className="text-xs text-orange-700">High exposure</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium text-gray-700 mb-4">4-Hour Forecast</h4>
+              <div className="space-y-3">
+                {weatherData.forecast.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm text-gray-600">{item.hour}:00</span>
+                      <Sun className="w-4 h-4 text-yellow-500" />
+                      <span className="text-sm capitalize">{item.condition}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{item.temperature}°C</p>
+                      <p className="text-xs text-gray-500">{item.windSpeed} m/s</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-gray-700 mb-4">Flight Conditions</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <span className="text-sm text-green-800">Wind Speed</span>
+                  <span className="font-medium text-green-900">✓ Safe for flight</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <span className="text-sm text-green-800">Visibility</span>
+                  <span className="font-medium text-green-900">✓ {weatherData.visibility} km</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                  <span className="text-sm text-yellow-800">Precipitation</span>
+                  <span className="font-medium text-yellow-900">⚠ Light rain expected</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <span className="text-sm text-blue-800">Pressure</span>
+                  <span className="font-medium text-blue-900">{weatherData.pressure} hPa</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Geofencing Management */}
+      {viewMode === 'geofence' && (
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Geofencing & No-Fly Zones</h3>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setShowGeofences(!showGeofences)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                  showGeofences ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+                }`}
+              >
+                <Shield className="w-4 h-4" />
+                <span>{showGeofences ? 'Active' : 'Inactive'}</span>
+              </button>
+              <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                <Plus className="w-4 h-4" />
+                <span>Add Zone</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium text-gray-700 mb-4">Active Geofence Zones</h4>
+              <div className="space-y-4">
+                {geofences.map((zone) => (
+                  <div key={zone.id} className={`p-4 rounded-lg border-2 ${
+                    zone.type === 'no_fly' ? 'border-red-200 bg-red-50' :
+                    zone.type === 'restricted' ? 'border-yellow-200 bg-yellow-50' :
+                    'border-green-200 bg-green-50'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-medium text-gray-900">{zone.name}</h5>
+                      <div className={`px-2 py-1 rounded text-xs font-medium ${
+                        zone.priority === 'critical' ? 'bg-red-500 text-white' :
+                        zone.priority === 'high' ? 'bg-orange-500 text-white' :
+                        zone.priority === 'medium' ? 'bg-yellow-500 text-white' :
+                        'bg-green-500 text-white'
+                      }`}>
+                        {zone.priority}
+                      </div>
+                    </div>
+                    <div className="space-y-1 text-sm text-gray-600">
+                      <p>Type: <span className="capitalize font-medium">{zone.type.replace('_', ' ')}</span></p>
+                      <p>Altitude: {zone.altitude_min}m - {zone.altitude_max}m</p>
+                      <p>Coordinates: {zone.coordinates.length} points</p>
+                      <p>Status: <span className={`font-medium ${zone.active ? 'text-green-600' : 'text-red-600'}`}>
+                        {zone.active ? 'Active' : 'Inactive'}
+                      </span></p>
+                    </div>
+                    <div className="flex items-center space-x-2 mt-3">
+                      <button className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+                        Edit
+                      </button>
+                      <button className="px-3 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600">
+                        View on Map
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-gray-700 mb-4">3D Terrain Map with Geofences</h4>
+              <div className="h-80 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center border-2 border-gray-200">
+                <div className="text-center">
+                  <Mountain className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">3D Terrain View with Geofencing</p>
+                  <p className="text-sm text-gray-500 mt-2">Interactive 3D map showing:</p>
+                  <ul className="text-xs text-gray-500 mt-2 space-y-1">
+                    <li>• Terrain elevation and contours</li>
+                    <li>• No-fly zones in red overlay</li>
+                    <li>• Safe zones in green overlay</li>
+                    <li>• Real-time drone positions</li>
+                    <li>• Restricted airspace boundaries</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-3 h-3 bg-red-500 rounded"></div>
+                    <span>No-Fly Zones</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-3 h-3 bg-green-500 rounded"></div>
+                    <span>Safe Zones</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                    <span>Drone Positions</span>
+                  </div>
+                </div>
+                <button className="px-3 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600">
+                  Fullscreen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Soil Grid API Dashboard */}
+      {viewMode === 'soil' && (
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Soil Grid Analysis</h3>
+            <div className="flex items-center space-x-2">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                <Database className="w-4 h-4" />
+                <span>Sync Soil Data</span>
+              </button>
+              <select 
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              >
+                {locationProfiles.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <h4 className="font-medium text-gray-700 mb-4">Soil Parameters Grid</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                {soilData.map((soil, index) => (
+                  <div key={index} className="bg-gradient-to-br from-brown-50 to-yellow-50 p-4 rounded-lg border">
+                    <div className="text-center mb-3">
+                      <h5 className="font-medium text-gray-800">Grid {index + 1}</h5>
+                      <p className="text-xs text-gray-600">
+                        {soil.location.lat.toFixed(4)}, {soil.location.lng.toFixed(4)}
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>pH:</span>
+                        <span className={`font-medium ${soil.ph >= 6.5 && soil.ph <= 7.5 ? 'text-green-600' : 'text-orange-600'}`}>
+                          {soil.ph}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Moisture:</span>
+                        <span className={`font-medium ${soil.moisture >= 40 ? 'text-blue-600' : 'text-red-600'}`}>
+                          {soil.moisture}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>N-P-K:</span>
+                        <span className="font-medium text-purple-600">
+                          {soil.nitrogen}-{soil.phosphorus}-{soil.potassium}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Organic:</span>
+                        <span className="font-medium text-green-600">{soil.organicMatter}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-gray-100 rounded-lg p-4">
+                <h5 className="font-medium text-gray-700 mb-3">Soil Health Recommendations</h5>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>pH levels are optimal for wheat cultivation</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span>Consider irrigation in Grid 2 - moisture below 40%</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span>Nitrogen levels adequate, phosphorus could be improved</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-gray-700 mb-4">Location Profile</h4>
+              {locationProfiles.find(l => l.id === selectedLocation) && (
+                <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                  <h5 className="font-medium text-blue-900 mb-3">
+                    {locationProfiles.find(l => l.id === selectedLocation)?.name}
+                  </h5>
+                  <div className="space-y-2 text-sm text-blue-800">
+                    <p><span className="font-medium">Crop:</span> {locationProfiles.find(l => l.id === selectedLocation)?.cropType}</p>
+                    <p><span className="font-medium">Area:</span> {locationProfiles.find(l => l.id === selectedLocation)?.area} hectares</p>
+                    <p><span className="font-medium">Planted:</span> {locationProfiles.find(l => l.id === selectedLocation)?.plantingDate}</p>
+                    <p><span className="font-medium">Soil Type:</span> {locationProfiles.find(l => l.id === selectedLocation)?.soilType}</p>
+                    <p><span className="font-medium">Irrigation:</span> {locationProfiles.find(l => l.id === selectedLocation)?.irrigationType}</p>
+                  </div>
+                </div>
+              )}
+
+              <h4 className="font-medium text-gray-700 mb-4">Nutrient Analysis</h4>
+              <div className="space-y-3">
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-green-800">Nitrogen (N)</span>
+                    <span className="text-green-900 font-bold">85 ppm</span>
+                  </div>
+                  <div className="w-full bg-green-200 rounded-full h-2">
+                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-blue-800">Phosphorus (P)</span>
+                    <span className="text-blue-900 font-bold">32 ppm</span>
+                  </div>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '64%' }}></div>
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 p-3 rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-purple-800">Potassium (K)</span>
+                    <span className="text-purple-900 font-bold">180 ppm</span>
+                  </div>
+                  <div className="w-full bg-purple-200 rounded-full h-2">
+                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '90%' }}></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
+                <h5 className="font-medium text-yellow-800 mb-2">Action Required</h5>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• Apply phosphorus fertilizer to Grid 2</li>
+                  <li>• Monitor moisture levels daily</li>
+                  <li>• Schedule soil test in 2 weeks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Real-time Analytics Dashboard */}
+      {viewMode === 'realtime' && (
+        <div className="space-y-6">
+          {/* Performance KPIs */}
+          <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">System Performance KPIs</h3>
+              <div className="flex items-center space-x-2 text-sm text-green-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Live Data Stream</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2 bg-blue-500 rounded-lg">
+                    <Activity className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-blue-900">{performanceMetrics.flightEfficiency.toFixed(1)}%</p>
+                    <p className="text-xs text-blue-600 font-medium">Flight Efficiency</p>
+                  </div>
+                </div>
+                <div className="w-full bg-blue-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${performanceMetrics.flightEfficiency}%` }}
+                  ></div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className="text-blue-700">Target: 90%</span>
+                  <span className="text-green-600 font-medium">+2.3% ↗</span>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2 bg-green-500 rounded-lg">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-green-900">{performanceMetrics.dataAccuracy.toFixed(1)}%</p>
+                    <p className="text-xs text-green-600 font-medium">Data Accuracy</p>
+                  </div>
+                </div>
+                <div className="w-full bg-green-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${performanceMetrics.dataAccuracy}%` }}
+                  ></div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className="text-green-700">Target: 95%</span>
+                  <span className="text-green-600 font-medium">+0.8% ↗</span>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2 bg-purple-500 rounded-lg">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-purple-900">{performanceMetrics.systemUptime.toFixed(1)}%</p>
+                    <p className="text-xs text-purple-600 font-medium">System Uptime</p>
+                  </div>
+                </div>
+                <div className="w-full bg-purple-200 rounded-full h-2">
+                  <div 
+                    className="bg-purple-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${performanceMetrics.systemUptime}%` }}
+                  ></div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className="text-purple-700">Target: 99%</span>
+                  <span className="text-green-600 font-medium">+0.2% ↗</span>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2 bg-orange-500 rounded-lg">
+                    <Battery className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-orange-900">{performanceMetrics.energyOptimization.toFixed(1)}%</p>
+                    <p className="text-xs text-orange-600 font-medium">Energy Optimization</p>
+                  </div>
+                </div>
+                <div className="w-full bg-orange-200 rounded-full h-2">
+                  <div 
+                    className="bg-orange-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${performanceMetrics.energyOptimization}%` }}
+                  ></div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className="text-orange-700">Target: 85%</span>
+                  <span className="text-green-600 font-medium">+1.5% ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Advanced Real-time Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Enhanced Battery & Altitude Chart with Gradients */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-semibold text-gray-900">Flight Performance Monitor</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-gray-500">Live Stream</span>
+                </div>
+              </div>
+              
+              <div className="relative h-64 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg p-4">
+                <svg className="w-full h-full" viewBox="0 0 400 200">
+                  <defs>
+                    <linearGradient id="batteryAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{stopColor: '#3B82F6', stopOpacity: 0.6}} />
+                      <stop offset="100%" style={{stopColor: '#3B82F6', stopOpacity: 0.1}} />
+                    </linearGradient>
+                    <linearGradient id="altitudeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{stopColor: '#10B981', stopOpacity: 0.8}} />
+                      <stop offset="100%" style={{stopColor: '#10B981', stopOpacity: 0.2}} />
+                    </linearGradient>
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                      <feMerge> 
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  
+                  {/* Enhanced Grid with depth */}
+                  {[0, 1, 2, 3, 4].map(i => (
+                    <g key={i}>
+                      <line 
+                        x1="50" y1={40 + i * 30} x2="350" y2={40 + i * 30} 
+                        stroke="#E5E7EB" strokeWidth="1" strokeDasharray="3,3" opacity="0.7"
+                      />
+                      <text x="45" y={45 + i * 30} textAnchor="end" className="text-xs fill-gray-400 font-medium">
+                        {100 - i * 25}
+                      </text>
+                    </g>
+                  ))}
+                  
+                  {/* Battery Area Chart with animation */}
+                  <path
+                    d={realtimeData.length > 1 ? realtimeData.map((point, index) => {
+                      const x = (index / (realtimeData.length - 1)) * 300 + 50;
+                      const y = 190 - (point.battery / 100) * 150;
+                      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                    }).join(' ') + ` L 350 190 L 50 190 Z` : ''}
+                    fill="url(#batteryAreaGradient)"
+                    stroke="#3B82F6"
+                    strokeWidth="2"
+                    filter="url(#glow)"
+                    className="transition-all duration-500"
+                  />
+                  
+                  {/* Altitude smooth curve with glow */}
+                  <path
+                    d={realtimeData.length > 1 ? realtimeData.map((point, index) => {
+                      const x = (index / (realtimeData.length - 1)) * 300 + 50;
+                      const y = 190 - (point.altitude / 100) * 150;
+                      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                    }).join(' ') : ''}
+                    fill="none"
+                    stroke="#10B981"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    filter="url(#glow)"
+                    className="drop-shadow-lg"
+                  />
+                  
+                  {/* Animated data points */}
+                  {realtimeData.slice(-5).map((point, index) => {
+                    const x = ((realtimeData.length - 5 + index) / (realtimeData.length - 1)) * 300 + 50;
+                    const batteryY = 190 - (point.battery / 100) * 150;
+                    const altitudeY = 190 - (point.altitude / 100) * 150;
+                    return (
+                      <g key={index}>
+                        <circle cx={x} cy={batteryY} r="4" fill="#3B82F6" className="animate-pulse">
+                          <animate attributeName="r" values="3;6;3" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx={x} cy={altitudeY} r="4" fill="#10B981" className="animate-pulse">
+                          <animate attributeName="r" values="3;6;3" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+                        </circle>
+                      </g>
+                    );
+                  })}
+                  
+                  {/* Enhanced Legend */}
+                  <g transform="translate(60, 15)">
+                    <rect x="0" y="0" width="14" height="10" fill="#3B82F6" rx="3" />
+                    <text x="20" y="8" className="text-xs fill-gray-700 font-medium">
+                      Battery: {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].battery.toFixed(1) : '78.0'}%
+                    </text>
+                    <rect x="140" y="0" width="14" height="10" fill="#10B981" rx="3" />
+                    <text x="160" y="8" className="text-xs fill-gray-700 font-medium">
+                      Altitude: {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].altitude.toFixed(0) : '50'}m
+                    </text>
+                  </g>
+                </svg>
+                
+                {/* Enhanced live overlay */}
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-black/90 to-gray-900/90 text-white px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                      <span className="text-blue-300">Battery:</span>
+                      <span className="font-bold text-lg">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].battery.toFixed(1) : '78.0'}%
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                      <span className="text-green-300">Alt:</span>
+                      <span className="font-bold text-lg">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].altitude.toFixed(0) : '50'}m
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Revolutionary Environmental Monitoring */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-semibold text-gray-900">Environmental Analytics</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-gray-500">Multi-Sensor</span>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 h-64">
+                {/* Temperature Radial Gauge */}
+                <div className="flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 rounded-lg p-4">
+                  <div className="relative w-24 h-24">
+                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                      <circle cx="50" cy="50" r="45" fill="none" stroke="#FEE2E2" strokeWidth="6" />
+                      <circle 
+                        cx="50" cy="50" r="45" fill="none" 
+                        stroke="url(#tempGradient)" strokeWidth="6" strokeLinecap="round"
+                        strokeDasharray={`${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].temperature : 25) / 50) * 283} 283`}
+                        className="transition-all duration-1000"
+                      >
+                        <animate attributeName="stroke-dasharray" 
+                          values={`0 283;${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].temperature : 25) / 50) * 283} 283`}
+                          dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <defs>
+                        <linearGradient id="tempGradient">
+                          <stop offset="0%" stopColor="#EF4444"/>
+                          <stop offset="100%" stopColor="#F97316"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-xl font-bold text-red-600">
+                          {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].temperature.toFixed(1) : '25.0'}
+                        </div>
+                        <div className="text-xs text-red-500">°C</div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-600 mt-2 font-medium">Temperature</span>
+                </div>
+
+                {/* Humidity Wave Gauge */}
+                <div className="flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4">
+                  <div className="relative w-24 h-24">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <circle cx="50" cy="50" r="45" fill="none" stroke="#DBEAFE" strokeWidth="6" />
+                      <circle 
+                        cx="50" cy="50" r="45" fill="none" 
+                        stroke="#3B82F6" strokeWidth="6" strokeLinecap="round"
+                        strokeDasharray={`${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].humidity : 65) / 100) * 283} 283`}
+                        className="transition-all duration-1000"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          attributeType="XML"
+                          type="rotate"
+                          from="0 50 50"
+                          to="360 50 50"
+                          dur="10s"
+                          repeatCount="indefinite"/>
+                      </circle>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-xl font-bold text-blue-600">
+                          {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].humidity.toFixed(0) : '65'}
+                        </div>
+                        <div className="text-xs text-blue-500">%</div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-600 mt-2 font-medium">Humidity</span>
+                </div>
+
+                {/* Wind Speed Compass */}
+                <div className="flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-4">
+                  <div className="relative w-24 h-24">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <circle cx="50" cy="50" r="45" fill="none" stroke="#D1FAE5" strokeWidth="2" />
+                      <circle cx="50" cy="50" r="35" fill="none" stroke="#D1FAE5" strokeWidth="1" />
+                      <circle cx="50" cy="50" r="25" fill="none" stroke="#D1FAE5" strokeWidth="1" />
+                      <g transform="translate(50, 50)">
+                        <line 
+                          x1="0" y1="-40" x2="0" y2="-20" 
+                          stroke="#10B981" strokeWidth="4" strokeLinecap="round"
+                          transform={`rotate(${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed : 10) / 25) * 360})`}
+                          className="transition-transform duration-1000"
+                        >
+                          <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            type="rotate"
+                            values={`0;${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed : 10) / 25) * 360 + 10};${((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed : 10) / 25) * 360}`}
+                            dur="1s"
+                            repeatCount="indefinite"/>
+                        </line>
+                        <circle cx="0" cy="0" r="4" fill="#10B981" />
+                      </g>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-green-600">
+                          {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed.toFixed(1) : '10.0'}
+                        </div>
+                        <div className="text-xs text-green-500">m/s</div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-600 mt-2 font-medium">Wind Speed</span>
+                </div>
+
+                {/* Soil Moisture Tank */}
+                <div className="flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4">
+                  <div className="relative w-16 h-20">
+                    <svg viewBox="0 0 60 80" className="w-full h-full">
+                      <rect x="15" y="10" width="30" height="60" fill="#E5E7EB" rx="15" strokeWidth="2" stroke="#D1D5DB"/>
+                      <rect 
+                        x="15" y={70 - ((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].soilMoisture : 45) / 100) * 60} 
+                        width="30" height={((realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].soilMoisture : 45) / 100) * 60} 
+                        fill="url(#soilGradient)" rx="15"
+                        className="transition-all duration-1000"
+                      />
+                      <defs>
+                        <linearGradient id="soilGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#8B5CF6"/>
+                          <stop offset="100%" stopColor="#A855F7"/>
+                        </linearGradient>
+                      </defs>
+                      {/* Animated bubbles */}
+                      <circle cx="25" cy="50" r="2" fill="#FFFFFF" fillOpacity="0.8">
+                        <animate attributeName="cy" values="60;20;60" dur="3s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="35" cy="45" r="1.5" fill="#FFFFFF" fillOpacity="0.6">
+                        <animate attributeName="cy" values="55;25;55" dur="4s" repeatCount="indefinite"/>
+                      </circle>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-purple-600">
+                          {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].soilMoisture.toFixed(0) : '45'}
+                        </div>
+                        <div className="text-xs text-purple-500">%</div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-600 mt-2 font-medium">Soil Moisture</span>
+                </div>
+              </div>
+            </div>
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <span className="text-red-400">Temp:</span>
+                      <span className="ml-1 font-bold">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].temperature.toFixed(1) : '26.5'}°C
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-blue-400">Humidity:</span>
+                      <span className="ml-1 font-bold">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].humidity.toFixed(1) : '68.0'}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Revolutionary Speed Performance with Histogram */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-semibold text-gray-900">Advanced Speed Analytics</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-gray-500">Real-time</span>
+                </div>
+              </div>
+              
+              <div className="relative h-64 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4">
+                <svg className="w-full h-full" viewBox="0 0 400 200">
+                  <defs>
+                    <linearGradient id="speedHistogramGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{stopColor: '#8B5CF6', stopOpacity: 0.9}} />
+                      <stop offset="50%" style={{stopColor: '#A855F7', stopOpacity: 0.7}} />
+                      <stop offset="100%" style={{stopColor: '#C084FC', stopOpacity: 0.3}} />
+                    </linearGradient>
+                    <filter id="speedGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  
+                  {/* Grid lines */}
+                  {[0, 1, 2, 3, 4].map(i => (
+                    <line key={i} x1="50" y1={40 + i * 30} x2="350" y2={40 + i * 30} stroke="#E5E7EB" strokeWidth="1" strokeDasharray="2,2" opacity="0.5" />
+                  ))}
+                  
+                  {/* Speed histogram bars */}
+                  {Array.from({ length: 20 }, (_, i) => {
+                    const currentSpeed = realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed : 12;
+                    const height = Math.random() * 100 + 30 + (Math.abs(i - 10) < 3 ? currentSpeed * 3 : 0);
+                    const isActive = Math.abs(i - (currentSpeed / 1.5)) < 2;
+                    return (
+                      <rect
+                        key={i}
+                        x={50 + i * 15}
+                        y={170 - height}
+                        width="12"
+                        height={height}
+                        fill={isActive ? "#8B5CF6" : "url(#speedHistogramGradient)"}
+                        rx="2"
+                        filter={isActive ? "url(#speedGlow)" : "none"}
+                        className={isActive ? "animate-pulse" : ""}
+                      >
+                        <animate attributeName="height" 
+                          values={`${height};${height + 10};${height}`}
+                          dur="3s" repeatCount="indefinite"/>
+                      </rect>
+                    );
+                  })}
+                  
+                  {/* Average speed indicator */}
+                  <line x1="50" y1="100" x2="350" y2="100" stroke="#EF4444" strokeWidth="2" strokeDasharray="8,4" />
+                  <text x="355" y="104" className="text-xs fill-red-500 font-medium">AVG</text>
+                  
+                  {/* Optimal range zone */}
+                  <rect x="50" y="70" width="300" height="50" fill="#10B981" fillOpacity="0.15" rx="4" />
+                  <text x="60" y="90" className="text-xs fill-green-600 font-medium">Optimal Zone</text>
+                  
+                  {/* Current speed indicator */}
+                  {(() => {
+                    const currentSpeed = realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed : 12;
+                    return (
+                      <g>
+                        <circle cx={50 + (currentSpeed / 1.5) * 15} cy="30" r="8" fill="#8B5CF6" className="animate-bounce">
+                          <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x={50 + (currentSpeed / 1.5) * 15} y="20" textAnchor="middle" className="text-xs fill-purple-700 font-bold">NOW</text>
+                      </g>
+                    );
+                  })()}
+                </svg>
+                
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-900/90 to-indigo-900/90 text-white px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-purple-400 rounded-full animate-ping"></div>
+                    <div>
+                      <span className="text-purple-200 text-sm">Speed:</span>
+                      <span className="ml-2 font-bold text-xl text-white">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].speed.toFixed(1) : '12.5'} m/s
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Performance indicators */}
+                <div className="absolute bottom-4 left-4 flex space-x-4 text-xs">
+                  <div className="bg-white/80 px-2 py-1 rounded flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Efficient</span>
+                  </div>
+                  <div className="bg-white/80 px-2 py-1 rounded flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span>Moderate</span>
+                  </div>
+                  <div className="bg-white/80 px-2 py-1 rounded flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <span>Alert</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Next-Generation Agricultural Analytics */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-semibold text-gray-900">Smart Agricultural Insights</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-gray-500">AI-Powered</span>
+                </div>
+              </div>
+              
+              <div className="relative h-64 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
+                <svg className="w-full h-full" viewBox="0 0 400 200">
+                  <defs>
+                    <radialGradient id="healthGradient" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" style={{stopColor: '#10B981', stopOpacity: 0.8}} />
+                      <stop offset="50%" style={{stopColor: '#059669', stopOpacity: 0.6}} />
+                      <stop offset="100%" style={{stopColor: '#047857', stopOpacity: 0.2}} />
+                    </radialGradient>
+                    <radialGradient id="alertGradient" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" style={{stopColor: '#EF4444', stopOpacity: 0.7}} />
+                      <stop offset="100%" style={{stopColor: '#EF4444', stopOpacity: 0.1}} />
+                    </radialGradient>
+                    <radialGradient id="warningGradient" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" style={{stopColor: '#F59E0B', stopOpacity: 0.7}} />
+                      <stop offset="100%" style={{stopColor: '#F59E0B', stopOpacity: 0.1}} />
+                    </radialGradient>
+                  </defs>
+                  
+                  {/* Field zones with health indicators */}
+                  <circle cx="120" cy="80" r="50" fill="url(#healthGradient)">
+                    <animate attributeName="r" values="45;55;45" dur="4s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="200" cy="120" r="35" fill="url(#warningGradient)">
+                    <animate attributeName="r" values="30;40;30" dur="3s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="280" cy="70" r="40" fill="url(#healthGradient)">
+                    <animate attributeName="r" values="35;45;35" dur="5s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="300" cy="140" r="25" fill="url(#alertGradient)">
+                    <animate attributeName="r" values="20;30;20" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                  
+                  {/* Crop health trend line */}
+                  <path
+                    d={realtimeData.length > 1 ? realtimeData.slice(-10).map((point, index) => {
+                      const x = 50 + index * 30;
+                      const y = 190 - (point.cropHealth / 100) * 130;
+                      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                    }).join(' ') : ''}
+                    fill="none"
+                    stroke="#16A34A"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    filter="drop-shadow(0 2px 6px rgba(22, 163, 74, 0.4))"
+                  />
+                  
+                  {/* Soil moisture visualization */}
+                  <path
+                    d={realtimeData.length > 1 ? realtimeData.slice(-10).map((point, index) => {
+                      const x = 50 + index * 30;
+                      const y = 190 - (point.soilMoisture / 100) * 130;
+                      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                    }).join(' ') : ''}
+                    fill="none"
+                    stroke="#F59E0B"
+                    strokeWidth="3"
+                    strokeDasharray="6,4"
+                    strokeLinecap="round"
+                  />
+                  
+                  {/* Real-time data points */}
+                  {realtimeData.slice(-5).map((point, index) => {
+                    const x = 50 + (index + 5) * 30;
+                    const healthY = 190 - (point.cropHealth / 100) * 130;
+                    const moistureY = 190 - (point.soilMoisture / 100) * 130;
+                    return (
+                      <g key={index}>
+                        <circle cx={x} cy={healthY} r="5" fill="#16A34A" className="animate-pulse">
+                          <animate attributeName="r" values="4;7;4" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx={x} cy={moistureY} r="4" fill="#F59E0B" className="animate-pulse">
+                          <animate attributeName="r" values="3;6;3" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                      </g>
+                    );
+                  })}
+                  
+                  {/* Zone labels with status */}
+                  <g transform="translate(120, 80)">
+                    <text textAnchor="middle" y="0" className="text-sm font-bold fill-green-800">Zone A</text>
+                    <text textAnchor="middle" y="12" className="text-xs fill-green-600">Healthy</text>
+                  </g>
+                  <g transform="translate(200, 120)">
+                    <text textAnchor="middle" y="0" className="text-sm font-bold fill-orange-800">Zone B</text>
+                    <text textAnchor="middle" y="12" className="text-xs fill-orange-600">Monitor</text>
+                  </g>
+                  <g transform="translate(280, 70)">
+                    <text textAnchor="middle" y="0" className="text-sm font-bold fill-green-800">Zone C</text>
+                    <text textAnchor="middle" y="12" className="text-xs fill-green-600">Excellent</text>
+                  </g>
+                  <g transform="translate(300, 140)">
+                    <text textAnchor="middle" y="0" className="text-sm font-bold fill-red-800">Zone D</text>
+                    <text textAnchor="middle" y="12" className="text-xs fill-red-600">Alert</text>
+                  </g>
+                </svg>
+                
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-green-900/90 to-emerald-900/90 text-white px-4 py-2 rounded-xl shadow-lg">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                      <span className="text-green-200">Health:</span>
+                      <span className="font-bold text-white">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].cropHealth.toFixed(1) : '85.0'}%
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
+                      <span className="text-amber-200">Moisture:</span>
+                      <span className="font-bold text-white">
+                        {realtimeData.length > 0 ? realtimeData[realtimeData.length - 1].soilMoisture.toFixed(1) : '45.0'}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* AI Insights Panel */}
+                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md">
+                  <div className="flex items-center space-x-2 text-xs">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span className="text-gray-700 font-medium">AI Recommendation:</span>
+                    <span className="text-blue-700">Optimal conditions detected</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Advanced Analytics Panel */}
+          <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-6">
+              <h4 className="font-semibold text-gray-900">Advanced Analytics & Predictions</h4>
+              <div className="flex items-center space-x-2">
+                <button className="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600">
+                  Export Data
+                </button>
+                <button className="px-3 py-1 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">
+                  AI Insights
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Efficiency Gauge */}
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl">
+                <h5 className="font-medium text-indigo-900 mb-4">Overall Efficiency</h5>
+                <div className="relative w-32 h-32 mx-auto">
+                  <svg className="transform -rotate-90 w-32 h-32">
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="56"
+                      stroke="#e0e7ff"
+                      strokeWidth="8"
+                      fill="transparent"
+                    />
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="56"
+                      stroke="#4f46e5"
+                      strokeWidth="8"
+                      fill="transparent"
+                      strokeDasharray={`${(performanceMetrics.flightEfficiency / 100) * 351.86} 351.86`}
+                      strokeLinecap="round"
+                      className="transition-all duration-1000"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-indigo-900">
+                        {performanceMetrics.flightEfficiency.toFixed(0)}%
+                      </div>
+                      <div className="text-xs text-indigo-600">Efficiency</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Trend Analysis */}
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl">
+                <h5 className="font-medium text-emerald-900 mb-4">Trend Analysis</h5>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-emerald-700">Battery Optimization</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-16 h-2 bg-emerald-200 rounded-full">
+                        <div className="w-12 h-2 bg-emerald-600 rounded-full"></div>
+                      </div>
+                      <span className="text-xs text-emerald-800 font-medium">75%</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-emerald-700">Route Efficiency</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-16 h-2 bg-emerald-200 rounded-full">
+                        <div className="w-14 h-2 bg-emerald-600 rounded-full"></div>
+                      </div>
+                      <span className="text-xs text-emerald-800 font-medium">87%</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-emerald-700">Data Quality</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-16 h-2 bg-emerald-200 rounded-full">
+                        <div className="w-15 h-2 bg-emerald-600 rounded-full"></div>
+                      </div>
+                      <span className="text-xs text-emerald-800 font-medium">94%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* AI Recommendations */}
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl">
+                <h5 className="font-medium text-amber-900 mb-4">AI Recommendations</h5>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full mt-2"></div>
+                    <div>
+                      <p className="text-amber-800 font-medium">Optimize flight path</p>
+                      <p className="text-amber-700 text-xs">Reduce energy consumption by 8%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full mt-2"></div>
+                    <div>
+                      <p className="text-amber-800 font-medium">Schedule maintenance</p>
+                      <p className="text-amber-700 text-xs">Drone-3 requires service in 2 days</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full mt-2"></div>
+                    <div>
+                      <p className="text-amber-800 font-medium">Weather alert</p>
+                      <p className="text-amber-700 text-xs">High winds expected tomorrow</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced 3D Map View */}
+      {viewMode === 'map' && (
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">3D Terrain Map & Flight Tracking</h3>
+            <div className="flex items-center space-x-2">
+              <button className="px-3 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600">
+                <Layers className="w-4 h-4" />
+              </button>
+              <button className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                <Compass className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="h-96 bg-gradient-to-br from-green-100 via-blue-100 to-brown-100 rounded-lg flex items-center justify-center border-2 border-gray-200 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-green-200/30 to-blue-200/30"></div>
+            <div className="text-center z-10">
+              <Mountain className="w-20 h-20 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-700 font-bold text-lg">3D Terrain Visualization</p>
+              <p className="text-sm text-gray-600 mt-2 max-w-md">
+                Real-time 3D terrain map with elevation data, drone flight paths, geofences, and agricultural field boundaries
+              </p>
+              <div className="mt-4 flex justify-center space-x-4 text-xs">
+                <div className="flex items-center space-x-1">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span>Active Drones</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span>Flight Paths</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span>Restricted Zones</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Simulated drone positions */}
+            <div className="absolute top-8 left-12 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-16 right-20 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h5 className="font-medium text-blue-800 mb-2">Map Controls</h5>
+              <div className="space-y-2">
+                <button className="w-full text-left px-3 py-2 bg-white rounded border hover:bg-gray-50">
+                  <Filter className="w-4 h-4 inline mr-2" />
+                  Toggle Layers
+                </button>
+                <button className="w-full text-left px-3 py-2 bg-white rounded border hover:bg-gray-50">
+                  <Search className="w-4 h-4 inline mr-2" />
+                  Search Location
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h5 className="font-medium text-green-800 mb-2">Flight Data</h5>
+              <div className="text-sm space-y-1">
+                <p>Active Flights: <span className="font-bold">2</span></p>
+                <p>Total Distance: <span className="font-bold">12.5 km</span></p>
+                <p>Area Covered: <span className="font-bold">45.3 ha</span></p>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h5 className="font-medium text-yellow-800 mb-2">Terrain Info</h5>
+              <div className="text-sm space-y-1">
+                <p>Elevation: <span className="font-bold">185-220m</span></p>
+                <p>Slope: <span className="font-bold">2-8%</span></p>
+                <p>Soil Type: <span className="font-bold">Loamy</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mission Management */}
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">Flight Missions</h3>
+          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <Plus className="w-4 h-4" />
+            <span>New Mission</span>
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {missions.map((mission) => (
+            <div key={mission.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className={`w-3 h-3 rounded-full ${
+                    mission.status === 'active' ? 'bg-green-500' :
+                    mission.status === 'pending' ? 'bg-yellow-500' :
+                    mission.status === 'completed' ? 'bg-blue-500' : 'bg-gray-500'
+                  }`}></div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{mission.name}</h4>
+                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                      <span className="capitalize">{mission.type}</span>
+                      <span>{mission.area} hectares</span>
+                      <span>{mission.waypoints.length} waypoints</span>
+                      <span className={`capitalize font-medium ${
+                        mission.priority === 'critical' ? 'text-red-600' :
+                        mission.priority === 'high' ? 'text-orange-600' :
+                        mission.priority === 'medium' ? 'text-yellow-600' : 'text-gray-600'
+                      }`}>
+                        {mission.priority} priority
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {mission.status === 'pending' && (
+                    <button className="p-2 bg-green-500 text-white rounded hover:bg-green-600">
+                      <Play className="w-4 h-4" />
+                    </button>
+                  )}
+                  {mission.status === 'active' && (
+                    <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600">
+                      <Square className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    <Settings className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {mission.startTime && (
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex items-center justify-between text-sm text-gray-600">
+                    <span>Started: {new Date(mission.startTime).toLocaleString()}</span>
+                    <span>Sensors: {mission.sensors.join(', ')}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Sensor Data */}
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">Recent Sensor Data</h3>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setViewMode('map')}
+              className={`px-3 py-1 rounded ${viewMode === 'map' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              Map
+            </button>
+            <button
+              onClick={() => setViewMode('data')}
+              className={`px-3 py-1 rounded ${viewMode === 'data' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              Data
+            </button>
+            <button
+              onClick={() => setViewMode('analysis')}
+              className={`px-3 py-1 rounded ${viewMode === 'analysis' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            >
+              Analysis
+            </button>
+          </div>
+        </div>
+
+        {viewMode === 'data' && (
+          <div className="space-y-4">
+            {/* Enhanced Data Analytics Dashboard */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="font-semibold text-gray-900">Comprehensive Data Analytics</h4>
+                <div className="flex items-center space-x-2">
+                  <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm">
+                    <option>Last 24 Hours</option>
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                  </select>
+                  <button className="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600">
+                    Generate Report
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Flight Pattern Heatmap */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-700 mb-3">Flight Pattern Heatmap</h5>
+                  <div className="relative h-48 bg-gradient-to-br from-blue-100 via-green-100 to-yellow-100 rounded border">
+                    <div className="absolute inset-4 grid grid-cols-8 gap-1">
+                      {Array.from({ length: 64 }, (_, i) => (
+                        <div
+                          key={i}
+                          className={`rounded ${
+                            Math.random() > 0.7 ? 'bg-red-500' :
+                            Math.random() > 0.5 ? 'bg-yellow-500' :
+                            Math.random() > 0.3 ? 'bg-green-500' : 'bg-blue-200'
+                          } opacity-${Math.floor(Math.random() * 9) + 1}0`}
+                        ></div>
+                      ))}
+                    </div>
+                    <div className="absolute bottom-2 left-2 text-xs text-gray-600">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-red-500 rounded"></div>
+                          <span>High Activity</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-yellow-500 rounded"></div>
+                          <span>Medium</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-green-500 rounded"></div>
+                          <span>Low</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Productivity Metrics */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-700 mb-3">Productivity Metrics</h5>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Area Surveyed Today</span>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-green-600">45.2 ha</span>
+                        <div className="text-xs text-green-500">+12% vs yesterday</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Images Captured</span>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-blue-600">2,847</span>
+                        <div className="text-xs text-blue-500">+8% vs yesterday</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Flight Hours</span>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-purple-600">6.8 hrs</span>
+                        <div className="text-xs text-purple-500">+15% vs yesterday</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Data Quality Score</span>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-orange-600">94.2%</span>
+                        <div className="text-xs text-orange-500">+2% vs yesterday</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Sensor Data with Charts */}
+            {sensorData.map((data, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      Location: {data.location.lat.toFixed(4)}, {data.location.lng.toFixed(4)}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(data.timestamp).toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Environmental Data with Mini Charts */}
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h5 className="font-medium text-blue-800 mb-3">Environmental</h5>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-700">Temperature:</span>
+                        <div className="text-right">
+                          <span className="font-bold text-blue-900">{data.environmental.temperature}°C</span>
+                          <div className="w-16 h-1 bg-blue-200 rounded mt-1">
+                            <div 
+                              className="h-1 bg-blue-600 rounded" 
+                              style={{ width: `${(data.environmental.temperature / 40) * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-700">Humidity:</span>
+                        <div className="text-right">
+                          <span className="font-bold text-blue-900">{data.environmental.humidity}%</span>
+                          <div className="w-16 h-1 bg-blue-200 rounded mt-1">
+                            <div 
+                              className="h-1 bg-blue-600 rounded" 
+                              style={{ width: `${data.environmental.humidity}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-700">Wind:</span>
+                        <div className="text-right">
+                          <span className="font-bold text-blue-900">{data.environmental.wind_speed} m/s</span>
+                          <div className="w-16 h-1 bg-blue-200 rounded mt-1">
+                            <div 
+                              className="h-1 bg-blue-600 rounded" 
+                              style={{ width: `${(data.environmental.wind_speed / 20) * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Multispectral Data with Visual Indicators */}
+                  {data.multispectral_data && (
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h5 className="font-medium text-green-800 mb-3">Multispectral Analysis</h5>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-green-700">NDVI:</span>
+                          <div className="text-right">
+                            <span className="font-bold text-green-900">{data.multispectral_data.ndvi}</span>
+                            <div className="w-16 h-1 bg-green-200 rounded mt-1">
+                              <div 
+                                className="h-1 bg-green-600 rounded" 
+                                style={{ width: `${data.multispectral_data.ndvi * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-green-700">GNDVI:</span>
+                          <div className="text-right">
+                            <span className="font-bold text-green-900">{data.multispectral_data.gndvi}</span>
+                            <div className="w-16 h-1 bg-green-200 rounded mt-1">
+                              <div 
+                                className="h-1 bg-green-600 rounded" 
+                                style={{ width: `${data.multispectral_data.gndvi * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-green-700">RVI:</span>
+                          <div className="text-right">
+                            <span className="font-bold text-green-900">{data.multispectral_data.rvi}</span>
+                            <div className="w-16 h-1 bg-green-200 rounded mt-1">
+                              <div 
+                                className="h-1 bg-green-600 rounded" 
+                                style={{ width: `${(data.multispectral_data.rvi / 2) * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Analysis Results with Status Indicators */}
+                  <div className="bg-purple-50 rounded-lg p-4">
+                    <h5 className="font-medium text-purple-800 mb-3">AI Analysis</h5>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-700">Crop Health:</span>
+                        <div className="text-right">
+                          <span className="font-bold text-green-600">{(data.analysis.crop_health * 100).toFixed(0)}%</span>
+                          <div className="w-16 h-1 bg-purple-200 rounded mt-1">
+                            <div 
+                              className="h-1 bg-green-600 rounded" 
+                              style={{ width: `${data.analysis.crop_health * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-700">Disease:</span>
+                        <span className={`font-bold text-xs px-2 py-1 rounded ${
+                          data.analysis.disease_detected ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                        }`}>
+                          {data.analysis.disease_detected ? 'DETECTED' : 'CLEAR'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-700">Irrigation:</span>
+                        <span className={`font-bold text-xs px-2 py-1 rounded ${
+                          data.analysis.irrigation_needed ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {data.analysis.irrigation_needed ? 'NEEDED' : 'ADEQUATE'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-700">Weed Density:</span>
+                        <div className="text-right">
+                          <span className="font-bold text-purple-900">{(data.analysis.weed_density * 100).toFixed(1)}%</span>
+                          <div className="w-16 h-1 bg-purple-200 rounded mt-1">
+                            <div 
+                              className="h-1 bg-yellow-500 rounded" 
+                              style={{ width: `${data.analysis.weed_density * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions Panel */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h5 className="font-medium text-gray-800 mb-3">Quick Actions</h5>
+                    <div className="space-y-2">
+                      <button className="w-full px-3 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        View Images
+                      </button>
+                      <button className="w-full px-3 py-2 bg-green-500 text-white rounded text-sm hover:bg-green-600">
+                        Generate Report
+                      </button>
+                      <button className="w-full px-3 py-2 bg-purple-500 text-white rounded text-sm hover:bg-purple-600">
+                        Schedule Recheck
+                      </button>
+                      <button className="w-full px-3 py-2 bg-orange-500 text-white rounded text-sm hover:bg-orange-600">
+                        Export Data
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detailed Analysis Section */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <h5 className="font-medium text-gray-800 mb-4">Detailed Analysis & Recommendations</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
+                      <h6 className="font-medium text-green-800 mb-2">Positive Indicators</h6>
+                      <ul className="text-sm text-green-700 space-y-1">
+                        <li>• High crop health index ({(data.analysis.crop_health * 100).toFixed(0)}%)</li>
+                        <li>• Optimal NDVI values indicating healthy vegetation</li>
+                        <li>• No disease symptoms detected in current scan</li>
+                        <li>• Environmental conditions within optimal range</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-lg">
+                      <h6 className="font-medium text-amber-800 mb-2">Areas for Attention</h6>
+                      <ul className="text-sm text-amber-700 space-y-1">
+                        <li>• Monitor weed density levels ({(data.analysis.weed_density * 100).toFixed(1)}%)</li>
+                        <li>• Consider targeted irrigation in dry patches</li>
+                        <li>• Schedule follow-up scan in 3-5 days</li>
+                        <li>• Review fertilizer application schedule</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {viewMode === 'map' && (
+          <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+            <div className="text-center">
+              <Map className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-600">Interactive drone tracking map</p>
+              <p className="text-sm text-gray-500">Real-time position and flight path visualization</p>
+            </div>
+          </div>
+        )}
+
+        {viewMode === 'analysis' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: 'Avg Crop Health', value: '85%', trend: '+5%', color: 'green' },
+              { label: 'Disease Detection', value: '2 spots', trend: '-1', color: 'red' },
+              { label: 'Irrigation Need', value: '15%', trend: '-8%', color: 'blue' },
+              { label: 'Coverage Today', value: '45.2 ha', trend: '+12 ha', color: 'purple' }
+            ].map((metric, index) => (
+              <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                <h5 className="text-sm font-medium text-gray-600">{metric.label}</h5>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{metric.value}</p>
+                <div className="flex items-center mt-2">
+                  <TrendingUp className={`w-4 h-4 text-${metric.color}-500 mr-1`} />
+                  <span className={`text-sm text-${metric.color}-600`}>{metric.trend}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default DroneMonitoringSystem;
