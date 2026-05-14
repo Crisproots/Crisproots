@@ -1,0 +1,877 @@
+
+C:\Users\shksh\Desktop\Crisproots>npm run build
+
+> unified-farm-app@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.4
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 5.0s
+
+Failed to compile.
+
+./src/aigardenadvisor/components/Hero.tsx
+50:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+82:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/aigardenadvisor/components/Testimonials.tsx
+23:48  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+23:56  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+25:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/ai-form-filling/client/src/components/document-scanner.tsx
+165:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+366:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/ai-form-filling/client/src/components/form-field-with-voice.tsx
+14:9  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+16:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+202:25  Error: 'formField' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/client/src/components/photo-capture.tsx
+162:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+367:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/ai-form-filling/client/src/components/signature-pad.tsx
+4:32  Error: 'X' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/client/src/components/voice-assistant.tsx
+140:31  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+140:41  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/app/ai-form-filling/client/src/hooks/use-speech-recognition.ts
+12:26  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+13:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/ai-form-filling/client/src/hooks/use-toast.ts
+18:7  Error: 'actionTypes' is assigned a value but only used as a type.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/client/src/lib/speech-utils.ts
+70:7  Error: 'email' is never reassigned. Use 'const' instead.  prefer-const
+137:9  Error: 'year' is never reassigned. Use 'const' instead.  prefer-const
+138:9  Error: 'others' is never reassigned. Use 'const' instead.  prefer-const
+148:12  Error: 'day' is never reassigned. Use 'const' instead.  prefer-const
+148:17  Error: 'month' is never reassigned. Use 'const' instead.  prefer-const
+158:12  Error: 'day' is never reassigned. Use 'const' instead.  prefer-const
+158:17  Error: 'month' is never reassigned. Use 'const' instead.  prefer-const
+
+./src/app/ai-form-filling/client/src/pages/form-filling.tsx
+48:10  Error: 'isVoiceFilling' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+49:10  Error: 'voiceFieldIndex' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+50:29  Error: 'setCurrentFieldIndex' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+60:27  Error: 'stopListening' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+73:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+99:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+406:9  Error: 'processIncomeText' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+471:9  Error: 'extractDigitsFromText' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+506:9  Error: 'capitalizeWords' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+559:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+575:6  Warning: React Hook useEffect has missing dependencies: 'allVoiceFields' and 'form'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+698:55  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+720:52  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+759:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+806:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/ai-form-filling/client/src/pages/scheme-selection.tsx
+118:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/ai-form-filling/page.tsx
+85:15  Error: Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+./src/app/ai-form-filling/postcss.config.js
+1:1  Warning: Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+./src/app/ai-form-filling/server/index.ts
+12:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+42:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+42:52  Error: '_next' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/server/storage.ts
+1:10  Error: 'users' is defined but never used.  @typescript-eslint/no-unused-vars
+1:17  Error: 'formSubmissions' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/shared/schema.ts
+1:33  Error: 'integer' is defined but never used.  @typescript-eslint/no-unused-vars
+1:42  Error: 'boolean' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/ai-form-filling/tailwind.config.ts
+89:13  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+89:45  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+
+./src/app/api/blogs/route.ts
+4:5  Error: 'blogs' is never reassigned. Use 'const' instead.  prefer-const
+4:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/cattlefarmmanagement/cows/[id]/page.tsx
+31:6  Warning: React Hook useEffect has a missing dependency: 'loadCowData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+60:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/cropsimulation-v/page.tsx
+64:10  Error: 'isClient' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+144:54  Error: '_country' is defined but never used.  @typescript-eslint/no-unused-vars
+464:31  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+464:47  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+466:30  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+466:46  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+490:37  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+490:53  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+492:36  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+492:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/app/greenguardian/dashboard/page.tsx
+8:10  Error: 'getEnvironmentalData' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/greenguardian/historical-data/page.tsx
+6:10  Error: 'getHistoricalData' is defined but never used.  @typescript-eslint/no-unused-vars
+33:6  Warning: React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/greenguardian/map-view/page.tsx
+7:10  Error: 'getEnvironmentalData' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/greenguardian/settings/page.tsx
+3:27  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/new-page.tsx
+439:35  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+543:21  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+543:40  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+548:21  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+548:43  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/cattlefarmmanagement/components/Analytics.tsx
+14:62  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+16:46  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+22:6  Warning: React Hook useEffect has a missing dependency: 'loadComparison'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cattlefarmmanagement/components/CowManagement.tsx
+32:6  Warning: React Hook useEffect has a missing dependency: 'loadCows'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+60:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/components/cows/AddEditCowModal.tsx
+45:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/components/cows/AddRecordModal.tsx
+3:13  Error: 'HeartPulse' is defined but never used.  @typescript-eslint/no-unused-vars
+3:41  Error: 'Syringe' is defined but never used.  @typescript-eslint/no-unused-vars
+3:50  Error: 'ClipboardList' is defined but never used.  @typescript-eslint/no-unused-vars
+3:65  Error: 'Droplet' is defined but never used.  @typescript-eslint/no-unused-vars
+84:6  Warning: React Hook useEffect has a missing dependency: 'initialFormState'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+139:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+200:83  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+307:92  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/components/cows/CowDetails.tsx
+29:6  Warning: React Hook useEffect has a missing dependency: 'loadCowData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+57:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cattlefarmmanagement/components/Dashboard.tsx
+243:73  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+278:26  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/cattlefarmmanagement/components/DataEntry.tsx
+18:6  Warning: React Hook useEffect has a missing dependency: 'loadRecords'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+67:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+95:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/components/Navbar.tsx
+18:68  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/components/Reports.tsx
+17:6  Warning: React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+76:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/hooks/useErrorHandler.ts
+8:68  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/lib/cowService.ts
+82:11  Error: 'baseQuery' is never reassigned. Use 'const' instead.  prefer-const
+83:11  Error: 'constraints' is never reassigned. Use 'const' instead.  prefer-const
+83:24  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cattlefarmmanagement/lib/dataService.ts
+95:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+95:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+102:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+106:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+114:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+114:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+119:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+132:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+137:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+141:50  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+145:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+147:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+147:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+152:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+160:52  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+164:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+166:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+166:50  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+171:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+179:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+220:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+231:26  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+232:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+240:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+248:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+249:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+257:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+309:84  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/Advanced3DVisualization.tsx
+29:26  Error: 'setCameraPosition' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/AdvancedCropManagementSystem.tsx
+6:39  Error: 'Cloud' is defined but never used.  @typescript-eslint/no-unused-vars
+6:46  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+7:54  Error: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+8:19  Error: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+8:29  Error: 'Filter' is defined but never used.  @typescript-eslint/no-unused-vars
+8:37  Error: 'Search' is defined but never used.  @typescript-eslint/no-unused-vars
+8:45  Error: 'Download' is defined but never used.  @typescript-eslint/no-unused-vars
+9:13  Error: 'Battery' is defined but never used.  @typescript-eslint/no-unused-vars
+9:22  Error: 'Gauge' is defined but never used.  @typescript-eslint/no-unused-vars
+9:29  Error: 'Target' is defined but never used.  @typescript-eslint/no-unused-vars
+9:50  Error: 'Globe' is defined but never used.  @typescript-eslint/no-unused-vars
+10:3  Error: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+10:13  Error: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+10:20  Error: 'Database' is defined but never used.  @typescript-eslint/no-unused-vars
+10:41  Error: 'Play' is defined but never used.  @typescript-eslint/no-unused-vars
+10:47  Error: 'Pause' is defined but never used.  @typescript-eslint/no-unused-vars
+11:3  Error: 'ArrowUp' is defined but never used.  @typescript-eslint/no-unused-vars
+11:12  Error: 'ArrowDown' is defined but never used.  @typescript-eslint/no-unused-vars
+11:23  Error: 'Maximize' is defined but never used.  @typescript-eslint/no-unused-vars
+11:33  Error: 'Minimize' is defined but never used.  @typescript-eslint/no-unused-vars
+11:43  Error: 'RotateCcw' is defined but never used.  @typescript-eslint/no-unused-vars
+362:57  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+799:72  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/AdvancedDroneMonitoringSystem.tsx
+9:3  Error: 'WifiOff' is defined but never used.  @typescript-eslint/no-unused-vars
+9:12  Error: 'RefreshCw' is defined but never used.  @typescript-eslint/no-unused-vars
+9:23  Error: 'Plus' is defined but never used.  @typescript-eslint/no-unused-vars
+9:29  Error: 'Download' is defined but never used.  @typescript-eslint/no-unused-vars
+10:8  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+10:14  Error: 'Compass' is defined but never used.  @typescript-eslint/no-unused-vars
+10:23  Error: 'Shield' is defined but never used.  @typescript-eslint/no-unused-vars
+10:31  Error: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+10:36  Error: 'Database' is defined but never used.  @typescript-eslint/no-unused-vars
+11:13  Error: 'Search' is defined but never used.  @typescript-eslint/no-unused-vars
+11:21  Error: 'Filter' is defined but never used.  @typescript-eslint/no-unused-vars
+11:55  Error: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+12:3  Error: 'Radio' is defined but never used.  @typescript-eslint/no-unused-vars
+12:10  Error: 'Gauge' is defined but never used.  @typescript-eslint/no-unused-vars
+12:17  Error: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+12:27  Error: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+12:34  Error: 'FileText' is defined but never used.  @typescript-eslint/no-unused-vars
+12:44  Error: 'Maximize' is defined but never used.  @typescript-eslint/no-unused-vars
+12:54  Error: 'Minimize' is defined but never used.  @typescript-eslint/no-unused-vars
+13:31  Error: 'Move' is defined but never used.  @typescript-eslint/no-unused-vars
+13:37  Error: 'Volume2' is defined but never used.  @typescript-eslint/no-unused-vars
+13:46  Error: 'VolumeX' is defined but never used.  @typescript-eslint/no-unused-vars
+13:55  Error: 'Mic' is defined but never used.  @typescript-eslint/no-unused-vars
+13:60  Error: 'MicOff' is defined but never used.  @typescript-eslint/no-unused-vars
+13:68  Error: 'Mouse' is defined but never used.  @typescript-eslint/no-unused-vars
+83:27  Error: 'setIsLiveStreaming' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+84:10  Error: 'mapMode' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+84:19  Error: 'setMapMode' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+87:10  Error: 'flightPaths' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+87:23  Error: 'setFlightPaths' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+88:52  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+89:27  Error: 'setEmergencyAlerts' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+89:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+365:56  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+844:70  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/CrispRootCropManagement.tsx
+3:38  Error: 'useRef' is defined but never used.  @typescript-eslint/no-unused-vars
+5:3  Error: 'Satellite' is defined but never used.  @typescript-eslint/no-unused-vars
+6:3  Error: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Error: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+15:3  Error: 'Bug' is defined but never used.  @typescript-eslint/no-unused-vars
+22:3  Error: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+26:3  Error: 'LineChart' is defined but never used.  @typescript-eslint/no-unused-vars
+27:3  Error: 'PieChart' is defined but never used.  @typescript-eslint/no-unused-vars
+29:3  Error: 'Camera' is defined but never used.  @typescript-eslint/no-unused-vars
+31:3  Error: 'Radio' is defined but never used.  @typescript-eslint/no-unused-vars
+32:3  Error: 'Wifi' is defined but never used.  @typescript-eslint/no-unused-vars
+33:3  Error: 'Database' is defined but never used.  @typescript-eslint/no-unused-vars
+36:3  Error: 'Microscope' is defined but never used.  @typescript-eslint/no-unused-vars
+37:3  Error: 'Globe' is defined but never used.  @typescript-eslint/no-unused-vars
+39:3  Error: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+43:3  Error: 'RotateCcw' is defined but never used.  @typescript-eslint/no-unused-vars
+44:3  Error: 'Download' is defined but never used.  @typescript-eslint/no-unused-vars
+45:3  Error: 'Upload' is defined but never used.  @typescript-eslint/no-unused-vars
+46:3  Error: 'Share2' is defined but never used.  @typescript-eslint/no-unused-vars
+47:3  Error: 'Filter' is defined but never used.  @typescript-eslint/no-unused-vars
+48:3  Error: 'Search' is defined but never used.  @typescript-eslint/no-unused-vars
+49:3  Error: 'Plus' is defined but never used.  @typescript-eslint/no-unused-vars
+50:3  Error: 'Minus' is defined but never used.  @typescript-eslint/no-unused-vars
+52:3  Error: 'ChevronDown' is defined but never used.  @typescript-eslint/no-unused-vars
+53:3  Error: 'ChevronUp' is defined but never used.  @typescript-eslint/no-unused-vars
+54:3  Error: 'ChevronLeft' is defined but never used.  @typescript-eslint/no-unused-vars
+55:3  Error: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+56:3  Error: 'ArrowUp' is defined but never used.  @typescript-eslint/no-unused-vars
+58:3  Error: 'Navigation' is defined but never used.  @typescript-eslint/no-unused-vars
+59:3  Error: 'Crosshair' is defined but never used.  @typescript-eslint/no-unused-vars
+60:3  Error: 'Cpu' is defined but never used.  @typescript-eslint/no-unused-vars
+61:3  Error: 'HardDrive' is defined but never used.  @typescript-eslint/no-unused-vars
+62:3  Error: 'Monitor' is defined but never used.  @typescript-eslint/no-unused-vars
+63:3  Error: 'Smartphone' is defined but never used.  @typescript-eslint/no-unused-vars
+64:3  Error: 'Tablet' is defined but never used.  @typescript-eslint/no-unused-vars
+65:3  Error: 'Laptop' is defined but never used.  @typescript-eslint/no-unused-vars
+66:3  Error: 'Signal' is defined but never used.  @typescript-eslint/no-unused-vars
+67:3  Error: 'Battery' is defined but never used.  @typescript-eslint/no-unused-vars
+68:3  Error: 'Power' is defined but never used.  @typescript-eslint/no-unused-vars
+69:3  Error: 'Refresh' is defined but never used.  @typescript-eslint/no-unused-vars
+70:3  Error: 'Save' is defined but never used.  @typescript-eslint/no-unused-vars
+71:3  Error: 'FileText' is defined but never used.  @typescript-eslint/no-unused-vars
+72:3  Error: 'Image' is defined but never used.  @typescript-eslint/no-unused-vars
+73:3  Error: 'Video' is defined but never used.  @typescript-eslint/no-unused-vars
+74:3  Error: 'Music' is defined but never used.  @typescript-eslint/no-unused-vars
+75:3  Error: 'Archive' is defined but never used.  @typescript-eslint/no-unused-vars
+76:3  Error: 'Folder' is defined but never used.  @typescript-eslint/no-unused-vars
+77:3  Error: 'File' is defined but never used.  @typescript-eslint/no-unused-vars
+78:3  Error: 'Code' is defined but never used.  @typescript-eslint/no-unused-vars
+79:3  Error: 'Terminal' is defined but never used.  @typescript-eslint/no-unused-vars
+80:3  Error: 'Hash' is defined but never used.  @typescript-eslint/no-unused-vars
+81:3  Error: 'AtSign' is defined but never used.  @typescript-eslint/no-unused-vars
+82:3  Error: 'Percent' is defined but never used.  @typescript-eslint/no-unused-vars
+83:3  Error: 'DollarSign' is defined but never used.  @typescript-eslint/no-unused-vars
+84:3  Error: 'Euro' is defined but never used.  @typescript-eslint/no-unused-vars
+85:3  Error: 'PoundSterling' is defined but never used.  @typescript-eslint/no-unused-vars
+86:3  Error: 'Coins' is defined but never used.  @typescript-eslint/no-unused-vars
+87:3  Error: 'CreditCard' is defined but never used.  @typescript-eslint/no-unused-vars
+88:3  Error: 'Banknote' is defined but never used.  @typescript-eslint/no-unused-vars
+89:3  Error: 'Receipt' is defined but never used.  @typescript-eslint/no-unused-vars
+90:3  Error: 'Calculator' is defined but never used.  @typescript-eslint/no-unused-vars
+92:3  Error: 'Ruler' is defined but never used.  @typescript-eslint/no-unused-vars
+94:3  Error: 'Speedometer' is defined but never used.  @typescript-eslint/no-unused-vars
+95:3  Error: 'Timer' is defined but never used.  @typescript-eslint/no-unused-vars
+96:3  Error: 'Stopwatch' is defined but never used.  @typescript-eslint/no-unused-vars
+97:3  Error: 'Alarm' is defined but never used.  @typescript-eslint/no-unused-vars
+98:3  Error: 'Coffee' is defined but never used.  @typescript-eslint/no-unused-vars
+99:3  Error: 'Home' is defined but never used.  @typescript-eslint/no-unused-vars
+100:3  Error: 'Building' is defined but never used.  @typescript-eslint/no-unused-vars
+101:3  Error: 'Factory' is defined but never used.  @typescript-eslint/no-unused-vars
+102:3  Error: 'Warehouse' is defined but never used.  @typescript-eslint/no-unused-vars
+103:3  Error: 'Store' is defined but never used.  @typescript-eslint/no-unused-vars
+104:3  Error: 'ShoppingCart' is defined but never used.  @typescript-eslint/no-unused-vars
+105:3  Error: 'Package' is defined but never used.  @typescript-eslint/no-unused-vars
+106:3  Error: 'Truck' is defined but never used.  @typescript-eslint/no-unused-vars
+107:3  Error: 'Car' is defined but never used.  @typescript-eslint/no-unused-vars
+108:3  Error: 'Plane' is defined but never used.  @typescript-eslint/no-unused-vars
+109:3  Error: 'Ship' is defined but never used.  @typescript-eslint/no-unused-vars
+110:3  Error: 'Train' is defined but never used.  @typescript-eslint/no-unused-vars
+111:3  Error: 'Bicycle' is defined but never used.  @typescript-eslint/no-unused-vars
+112:3  Error: 'Tractor' is defined but never used.  @typescript-eslint/no-unused-vars
+113:3  Error: 'Wrench' is defined but never used.  @typescript-eslint/no-unused-vars
+114:3  Error: 'Hammer' is defined but never used.  @typescript-eslint/no-unused-vars
+115:3  Error: 'Screwdriver' is defined but never used.  @typescript-eslint/no-unused-vars
+116:3  Error: 'Scissors' is defined but never used.  @typescript-eslint/no-unused-vars
+117:3  Error: 'Paintbrush' is defined but never used.  @typescript-eslint/no-unused-vars
+118:3  Error: 'Pen' is defined but never used.  @typescript-eslint/no-unused-vars
+119:3  Error: 'Pencil' is defined but never used.  @typescript-eslint/no-unused-vars
+120:3  Error: 'Eraser' is defined but never used.  @typescript-eslint/no-unused-vars
+121:3  Error: 'Book' is defined but never used.  @typescript-eslint/no-unused-vars
+122:3  Error: 'BookOpen' is defined but never used.  @typescript-eslint/no-unused-vars
+123:3  Error: 'Bookmark' is defined but never used.  @typescript-eslint/no-unused-vars
+124:3  Error: 'Library' is defined but never used.  @typescript-eslint/no-unused-vars
+125:3  Error: 'GraduationCap' is defined but never used.  @typescript-eslint/no-unused-vars
+126:3  Error: 'Award' is defined but never used.  @typescript-eslint/no-unused-vars
+127:3  Error: 'Trophy' is defined but never used.  @typescript-eslint/no-unused-vars
+128:3  Error: 'Medal' is defined but never used.  @typescript-eslint/no-unused-vars
+129:3  Error: 'Star' is defined but never used.  @typescript-eslint/no-unused-vars
+130:3  Error: 'Heart' is defined but never used.  @typescript-eslint/no-unused-vars
+131:3  Error: 'ThumbsUp' is defined but never used.  @typescript-eslint/no-unused-vars
+132:3  Error: 'ThumbsDown' is defined but never used.  @typescript-eslint/no-unused-vars
+133:3  Error: 'Smile' is defined but never used.  @typescript-eslint/no-unused-vars
+134:3  Error: 'Frown' is defined but never used.  @typescript-eslint/no-unused-vars
+135:3  Error: 'Meh' is defined but never used.  @typescript-eslint/no-unused-vars
+136:3  Error: 'User' is defined but never used.  @typescript-eslint/no-unused-vars
+137:3  Error: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+138:3  Error: 'UserPlus' is defined but never used.  @typescript-eslint/no-unused-vars
+139:3  Error: 'UserMinus' is defined but never used.  @typescript-eslint/no-unused-vars
+140:3  Error: 'UserCheck' is defined but never used.  @typescript-eslint/no-unused-vars
+141:3  Error: 'UserX' is defined but never used.  @typescript-eslint/no-unused-vars
+142:3  Error: 'Crown' is defined but never used.  @typescript-eslint/no-unused-vars
+143:3  Error: 'Flag' is defined but never used.  @typescript-eslint/no-unused-vars
+144:3  Error: 'Mountain' is defined but never used.  @typescript-eslint/no-unused-vars
+145:3  Error: 'Tree' is defined but never used.  @typescript-eslint/no-unused-vars
+146:3  Error: 'Flower' is defined but never used.  @typescript-eslint/no-unused-vars
+147:3  Error: 'Leaf' is defined but never used.  @typescript-eslint/no-unused-vars
+148:3  Error: 'Seedling' is defined but never used.  @typescript-eslint/no-unused-vars
+149:3  Error: 'Fish' is defined but never used.  @typescript-eslint/no-unused-vars
+150:3  Error: 'Bird' is defined but never used.  @typescript-eslint/no-unused-vars
+151:3  Error: 'Butterfly' is defined but never used.  @typescript-eslint/no-unused-vars
+152:3  Error: 'Rabbit' is defined but never used.  @typescript-eslint/no-unused-vars
+153:3  Error: 'Dog' is defined but never used.  @typescript-eslint/no-unused-vars
+154:3  Error: 'Cat' is defined but never used.  @typescript-eslint/no-unused-vars
+155:3  Error: 'Cow' is defined but never used.  @typescript-eslint/no-unused-vars
+156:3  Error: 'Pig' is defined but never used.  @typescript-eslint/no-unused-vars
+157:3  Error: 'Sheep' is defined but never used.  @typescript-eslint/no-unused-vars
+158:3  Error: 'Horse' is defined but never used.  @typescript-eslint/no-unused-vars
+159:3  Error: 'Chicken' is defined but never used.  @typescript-eslint/no-unused-vars
+160:3  Error: 'Egg' is defined but never used.  @typescript-eslint/no-unused-vars
+164:16  Error: 'Bar' is defined but never used.  @typescript-eslint/no-unused-vars
+164:21  Error: 'Pie' is defined but never used.  @typescript-eslint/no-unused-vars
+164:43  Error: 'Scatter' is defined but never used.  @typescript-eslint/no-unused-vars
+164:52  Error: 'Bubble' is defined but never used.  @typescript-eslint/no-unused-vars
+327:10  Error: 'selectedField' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+327:25  Error: 'setSelectedField' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+328:10  Error: 'isLoading' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+328:21  Error: 'setIsLoading' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+361:20  Error: 'setSoilData' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+397:10  Error: 'digitalFences' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+397:25  Error: 'setDigitalFences' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+426:10  Error: 'droneData' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+426:21  Error: 'setDroneData' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+457:10  Error: 'disasterPredictions' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+457:31  Error: 'setDisasterPredictions' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+574:9  Error: 'yieldPredictionData' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+597:9  Error: 'getHealthColor' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+604:9  Error: 'getHealthIcon' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/DigitalFencingSystem.tsx
+82:18  Error: 'setFences' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+145:18  Error: 'setEvents' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/EnhancedPlantDiseaseDetection.tsx
+5:20  Error: 'PlantDiseaseAnalysis' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/HeatMapSystem.tsx
+6:3  Error: 'Thermometer' is defined but never used.  @typescript-eslint/no-unused-vars
+7:3  Error: 'Droplets' is defined but never used.  @typescript-eslint/no-unused-vars
+20:3  Error: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+22:3  Error: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
+24:3  Error: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+25:3  Error: 'Leaf' is defined but never used.  @typescript-eslint/no-unused-vars
+26:3  Error: 'Bug' is defined but never used.  @typescript-eslint/no-unused-vars
+27:3  Error: 'Sprout' is defined but never used.  @typescript-eslint/no-unused-vars
+28:3  Error: 'Sun' is defined but never used.  @typescript-eslint/no-unused-vars
+29:3  Error: 'Cloud' is defined but never used.  @typescript-eslint/no-unused-vars
+30:3  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+185:24  Error: 'setZoneAnalysis' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/Navbar.tsx
+64:9  Error: 'getLinkClasses' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/PlantDiseaseDetection.tsx
+315:41  Error: Parsing error: ',' expected.
+
+./src/components/ui/AgriculturalAIAssistant.tsx
+103:3  Error: 'apiKey' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/ui/EnhancedCropSimulation.tsx
+14:3  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+17:3  Error: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+117:27  Error: 'setSimulationSpeed' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+145:10  Error: 'weatherForecast' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+145:27  Error: 'setWeatherForecast' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+171:6  Warning: React Hook useEffect has a missing dependency: 'updateCropData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/ui/IndianFarmingFeatures.tsx
+7:3  Error: 'Thermometer' is defined but never used.  @typescript-eslint/no-unused-vars
+8:3  Error: 'Droplets' is defined but never used.  @typescript-eslint/no-unused-vars
+9:3  Error: 'Sun' is defined but never used.  @typescript-eslint/no-unused-vars
+10:3  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Error: 'AlertTriangle' is defined but never used.  @typescript-eslint/no-unused-vars
+122:39  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+156:40  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/ui/StatsSection.tsx
+70:103  Error: Parsing error: Identifier expected.
+
+./src/components/ui/TestimonialsSection.tsx
+95:34  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+150:21  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+150:47  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+153:21  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+153:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/crisp/components/GeneResults.tsx
+10:150  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+184:92  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+184:97  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/crisp/services/api.ts
+65:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+72:12  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/crisp/utils/pdfGenerator.ts
+181:34  Error: 'idx' is defined but never used.  @typescript-eslint/no-unused-vars
+188:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+188:62  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+188:105  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+188:146  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation/App.tsx
+4:8  Error: 'StageDisplay' is defined but never used.  @typescript-eslint/no-unused-vars
+5:8  Error: 'Timeline' is defined but never used.  @typescript-eslint/no-unused-vars
+9:8  Error: 'PlantAnimation' is defined but never used.  @typescript-eslint/no-unused-vars
+11:8  Error: 'Enhanced3DCropSimulation' is defined but never used.  @typescript-eslint/no-unused-vars
+12:8  Error: 'AdvancedCropSimulation' is defined but never used.  @typescript-eslint/no-unused-vars
+13:8  Error: 'PlantPhysiologyMonitor' is defined but never used.  @typescript-eslint/no-unused-vars
+76:9  Error: 'cropInfo' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+93:9  Error: 'upcomingStages' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+94:9  Error: 'previousStages' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+129:54  Error: 'country' is defined but never used.  @typescript-eslint/no-unused-vars
+621:30  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+621:46  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+623:29  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+623:45  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/cropsimulation/components/AdvancedCropSimulation.tsx
+3:3  Error: 'Play' is defined but never used.  @typescript-eslint/no-unused-vars
+4:3  Error: 'Pause' is defined but never used.  @typescript-eslint/no-unused-vars
+5:3  Error: 'RotateCcw' is defined but never used.  @typescript-eslint/no-unused-vars
+6:3  Error: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+7:3  Error: 'Eye' is defined but never used.  @typescript-eslint/no-unused-vars
+8:3  Error: 'EyeOff' is defined but never used.  @typescript-eslint/no-unused-vars
+12:3  Error: 'Thermometer' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Error: 'Sun' is defined but never used.  @typescript-eslint/no-unused-vars
+14:3  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+15:3  Error: 'Seedling' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Error: 'Leaf' is defined but never used.  @typescript-eslint/no-unused-vars
+20:3  Error: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+40:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+59:3  Error: 'weatherData' is defined but never used.  @typescript-eslint/no-unused-vars
+123:6  Warning: React Hook useEffect has a missing dependency: 'currentDay'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+165:6  Warning: React Hook useEffect has a missing dependency: 'viewSettings.showParticles'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+291:115  Error: 'angle' is defined but never used.  @typescript-eslint/no-unused-vars
+451:32  Error: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+451:63  Error: 'centerX' is defined but never used.  @typescript-eslint/no-unused-vars
+451:80  Error: 'centerY' is defined but never used.  @typescript-eslint/no-unused-vars
+451:97  Error: 'height' is defined but never used.  @typescript-eslint/no-unused-vars
+451:113  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+451:128  Error: 'morphology' is defined but never used.  @typescript-eslint/no-unused-vars
+456:31  Error: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+456:62  Error: 'centerX' is defined but never used.  @typescript-eslint/no-unused-vars
+456:79  Error: 'centerY' is defined but never used.  @typescript-eslint/no-unused-vars
+456:96  Error: 'height' is defined but never used.  @typescript-eslint/no-unused-vars
+456:112  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+456:127  Error: 'morphology' is defined but never used.  @typescript-eslint/no-unused-vars
+461:96  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+473:94  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+570:45  Error: 'factor' is defined but never used.  @typescript-eslint/no-unused-vars
+608:6  Warning: React Hook useEffect has a missing dependency: 'render3DPlant'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/AutoWeatherSync.tsx
+57:6  Warning: React Hook useEffect has a missing dependency: 'syncWeatherData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+124:24  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+124:43  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+209:20  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+209:39  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/cropsimulation/components/CropSimulationDashboard.tsx
+57:3  Error: 'currentStage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/Enhanced3DCropSimulation.tsx
+3:3  Error: 'Play' is defined but never used.  @typescript-eslint/no-unused-vars
+4:3  Error: 'Pause' is defined but never used.  @typescript-eslint/no-unused-vars
+5:3  Error: 'RotateCcw' is defined but never used.  @typescript-eslint/no-unused-vars
+6:3  Error: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+9:3  Error: 'Maximize' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Error: 'Thermometer' is defined but never used.  @typescript-eslint/no-unused-vars
+14:3  Error: 'Sun' is defined but never used.  @typescript-eslint/no-unused-vars
+15:3  Error: 'Wind' is defined but never used.  @typescript-eslint/no-unused-vars
+36:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+89:3  Error: 'weatherData' is defined but never used.  @typescript-eslint/no-unused-vars
+139:10  Error: 'animationSpeed' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+139:26  Error: 'setAnimationSpeed' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+140:10  Error: 'particleSystem' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+140:26  Error: 'setParticleSystem' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+140:56  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+198:68  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+213:63  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+226:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+238:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+338:11  Error: 'progressRatio' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+358:24  Error: 'prev' is defined but never used.  @typescript-eslint/no-unused-vars
+399:107  Error: 'angle' is defined but never used.  @typescript-eslint/no-unused-vars
+507:105  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+534:104  Error: 'scale' is defined but never used.  @typescript-eslint/no-unused-vars
+658:6  Warning: React Hook useEffect has missing dependencies: 'render3DPlant', 'updatePlantMorphology', and 'updatePlantPhysiology'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/HelpTooltip.tsx
+2:10  Error: 'HelpCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/ParameterSliders.tsx
+106:68  Error: 'color' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/PCSeModelDisplay.tsx
+17:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+20:72  Error: 'currentStage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/PhotoUpload.tsx
+14:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+57:63  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+94:63  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+100:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/cropsimulation/components/PredictionPanel.tsx
+2:20  Error: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+8:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+66:7  Error: 'estimatedYield' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+80:7  Error: 'showOptimum' is never reassigned. Use 'const' instead.  prefer-const
+84:13  Error: 'model' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+85:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+227:28  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+235:11  Error: 'waterStress' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+378:7  Error: 'yieldProjection' is never reassigned. Use 'const' instead.  prefer-const
+409:6  Warning: React Hook useEffect has a missing dependency: 'fixedFinalYield'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/SoilInfo.tsx
+40:6  Warning: React Hook useEffect has a missing dependency: 'fetchSoilData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/StageDisplay.tsx
+8:64  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+10:13  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation/components/StateSelector.tsx
+193:6  Warning: React Hook useEffect has a missing dependency: 'countryStates'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/StatusBar.tsx
+10:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation/components/TaskList.tsx
+14:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+169:61  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+169:80  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+172:9  Error: 'bbchCode' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/Timeline.tsx
+2:23  Error: 'Circle' is defined but never used.  @typescript-eslint/no-unused-vars
+40:36  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+77:36  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation/components/WeatherForecast.tsx
+10:70  Error: 'currentDay' is defined but never used.  @typescript-eslint/no-unused-vars
+19:6  Warning: React Hook useEffect has a missing dependency: 'fetchForecast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/components/WeatherIntegration.tsx
+77:6  Warning: React Hook useEffect has a missing dependency: 'location'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+82:6  Warning: React Hook useEffect has a missing dependency: 'fetchWeatherData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+100:6  Warning: React Hook useEffect has missing dependencies: 'autoUpdateInterval' and 'fetchWeatherData'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation/data/bbchDatabase.ts
+76:274  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation/models/pcseModel.ts
+47:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation/services/geolocationService.ts
+190:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/App.tsx
+61:84  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+61:101  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+118:54  Error: 'country' is defined but never used.  @typescript-eslint/no-unused-vars
+483:30  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+483:46  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+485:29  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+485:45  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/cropsimulation-v/components/AutoWeatherSync.tsx
+57:6  Warning: React Hook useEffect has a missing dependency: 'syncWeatherData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+124:24  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+124:43  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+209:20  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+209:39  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/cropsimulation-v/components/HelpTooltip.tsx
+2:10  Error: 'HelpCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/components/ParameterSliders.tsx
+106:68  Error: 'color' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/components/PCSeModelDisplay.tsx
+17:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+20:72  Error: 'currentStage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/components/PhotoUpload.tsx
+14:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+57:63  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+94:63  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+100:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/cropsimulation-v/components/PredictionPanel.tsx
+2:20  Error: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+8:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+66:7  Error: 'estimatedYield' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+80:7  Error: 'showOptimum' is never reassigned. Use 'const' instead.  prefer-const
+84:13  Error: 'model' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+85:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+227:28  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+235:11  Error: 'waterStress' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+378:7  Error: 'yieldProjection' is never reassigned. Use 'const' instead.  prefer-const
+409:6  Warning: React Hook useEffect has a missing dependency: 'fixedFinalYield'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation-v/components/SoilInfo.tsx
+40:6  Warning: React Hook useEffect has a missing dependency: 'fetchSoilData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation-v/components/StageDisplay.tsx
+8:64  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+10:13  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation-v/components/StateSelector.tsx
+193:6  Warning: React Hook useEffect has a missing dependency: 'countryStates'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation-v/components/StatusBar.tsx
+10:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation-v/components/TaskList.tsx
+14:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+169:61  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+169:80  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+172:9  Error: 'bbchCode' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/components/Timeline.tsx
+2:23  Error: 'Circle' is defined but never used.  @typescript-eslint/no-unused-vars
+40:36  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+77:36  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/cropsimulation-v/components/WeatherForecast.tsx
+10:70  Error: 'currentDay' is defined but never used.  @typescript-eslint/no-unused-vars
+19:6  Warning: React Hook useEffect has a missing dependency: 'fetchForecast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation-v/components/WeatherIntegration.tsx
+77:6  Warning: React Hook useEffect has a missing dependency: 'location'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+82:6  Warning: React Hook useEffect has a missing dependency: 'fetchWeatherData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+100:6  Warning: React Hook useEffect has missing dependencies: 'autoUpdateInterval' and 'fetchWeatherData'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/cropsimulation-v/data/bbchDatabase.ts
+76:274  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation-v/models/pcseModel.ts
+47:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/cropsimulation-v/services/geolocationService.ts
+190:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/demandanalysis/App.tsx
+4:10  Error: 'LocationInput' is defined but never used.  @typescript-eslint/no-unused-vars
+5:10  Error: 'CropSelector' is defined but never used.  @typescript-eslint/no-unused-vars
+12:10  Error: 'VehicleInfoInput' is defined but never used.  @typescript-eslint/no-unused-vars
+182:6  Warning: React Hook useEffect has a missing dependency: 'analyzeMarket'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+310:29  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/demandanalysis/components/CropSelector.tsx
+57:21  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/demandanalysis/components/LocationInput.tsx
+90:9  Error: 'handleManualSelection' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+150:6  Warning: React Hook useEffect has a missing dependency: 'onLocationChange'. Either include it or remove the dependency array. If 'onLocationChange' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+205:20  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/demandanalysis/components/MarketRecommendations.tsx
+2:38  Error: 'useRef' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/demandanalysis/components/SeasonalAnalysis.tsx
+99:45  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/demandanalysis/components/StateMarketRecommendations.tsx
+2:18  Error: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+45:31  Error: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/demandanalysis/utils/dataProcessor.ts
+279:63  Error: 'key' is defined but never used.  @typescript-eslint/no-unused-vars
+326:63  Error: 'key' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/components/chat/SimpleChat.tsx
+1:27  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/components/ChatAgent.tsx
+11:10  Error: 'chatContext' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/components/common/LocationSelector.tsx
+2:27  Error: 'GeocodingResult' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/components/farming/CropCalendar.tsx
+42:6  Warning: React Hook useEffect has a missing dependency: 'fetchCropData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+304:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/greenguardian/components/gamification/Leaderboard.tsx
+19:27  Error: 'setLeaderboardData' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+178:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+197:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+229:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+276:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/greenguardian/components/map/EnvironmentalMap.tsx
+9:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+11:18  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+12:12  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+13:14  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+46:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/components/map/PollutionHeatMap.tsx
+39:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/components/plant/PlantHealthAnalyzer.tsx
+153:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/greenguardian/components/satellite/SatelliteImagery.tsx
+30:9  Error: 'NASA_API_BASE' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+31:9  Error: 'NASA_API_KEY' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+37:6  Warning: React Hook useEffect has a missing dependency: 'fetchSatelliteImages'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+49:11  Error: 'beforeDate' is never reassigned. Use 'const' instead.  prefer-const
+63:13  Error: 'todayFormatted' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+64:13  Error: 'beforeFormatted' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/contexts/AuthContext.tsx
+78:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+96:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+113:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+129:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+145:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/pages/Dashboard.tsx
+6:10  Error: 'getEnvironmentalData' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/pages/ForgotPassword.tsx
+25:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+41:44  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/greenguardian/pages/HistoricalData.tsx
+4:10  Error: 'getHistoricalData' is defined but never used.  @typescript-eslint/no-unused-vars
+31:6  Warning: React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/greenguardian/pages/Home.tsx
+32:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+128:102  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/greenguardian/pages/Login.tsx
+25:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/pages/MapView.tsx
+5:10  Error: 'getEnvironmentalData' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/pages/Register.tsx
+41:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/pages/ResetPassword.tsx
+13:9  Error: 'navigate' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+57:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/greenguardian/pages/Settings.tsx
+1:27  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/greenguardian/setupProxy.js
+1:35  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+
+./src/greenguardian/test-appwrite.js
+1:33  Error: A `require()` style import is forbidden.  @typescript-eslint/no-require-imports
+
+./src/plantdiseaseprediction/components/DiseasePredictor.tsx
+53:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+82:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+ .
+C:\Users\shksh\Desktop\Crisproots>

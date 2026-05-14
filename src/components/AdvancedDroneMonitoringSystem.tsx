@@ -5,9 +5,8 @@ import Advanced3DVisualization from './Advanced3DVisualization';
 import DroneModel3D from './DroneModel3D';
 import AdvancedLiveDronePOV from './AdvancedLiveDronePOV';
 import {
-  Drone, Camera, Battery, Signal, MapPin, Play, Pause, Square, Navigation,
-  Crosshair, Eye, Thermometer, Activity, Settings, Layers, Map, Satellite,
-  Target, Clock, TrendingUp, Wifi, WifiOff, RefreshCw, Plus, Download,
+  Drone, Camera, Thermometer, Activity, Layers,
+  WifiOff, RefreshCw, Plus, Download,
   Sun, Wind, Compass, Shield, Zap, Database, Globe, Mountain, TreePine,
   Droplets, Search, Filter, BarChart3, AlertTriangle, CheckCircle,
   Radio, Gauge, Calendar, Users, FileText, Maximize, Minimize,

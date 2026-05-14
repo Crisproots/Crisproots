@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import EnvironmentalMap from '../../../greenguardian/components/map/EnvironmentalMap';
+import dynamic from 'next/dynamic';
+
+const EnvironmentalMap = dynamic(
+  () => import('../../../greenguardian/components/map/EnvironmentalMap'),
+  { ssr: false, loading: () => <div className="h-[500px] w-full rounded-lg bg-gray-100 flex items-center justify-center">Loading map...</div> }
+);
 import LocationSelector from '../../../greenguardian/components/common/LocationSelector';
 import RiskSummary from '../../../greenguardian/components/dashboard/RiskSummary';
 import { getEnvironmentalData, EnvironmentalData } from '../../../greenguardian/services/api';
